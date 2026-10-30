@@ -181,40 +181,24 @@
             gap: 0;
         }
         .login-emblem {
-            width: 80px;
-            height: 80px;
+            width: auto;
+            height: auto;
             position: relative;
-            margin-bottom: 26px;
-            flex-shrink: 0;
-        }
-        .login-emblem-ring {
-            position: absolute;
-            inset: 0;
-            border-radius: 50%;
-            border: 1.5px solid transparent;
-            background: linear-gradient(#0a0a0a, #0a0a0a) padding-box,
-                linear-gradient(135deg, #444, #fff, #444) border-box;
-            animation: ring-spin 8s linear infinite;
-        }
-        @keyframes ring-spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-        .login-emblem-inner {
-            position: absolute;
-            inset: 7px;
-            background: #111;
-            border-radius: 50%;
+            margin-bottom: 24px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-family: 'Cinzel', 'Cormorant Garamond', serif;
-            font-size: 17px;
-            font-weight: 600;
-            color: #cec4b8;
-            font-style: normal !important;
-            letter-spacing: 2px;
+        }
+        .login-emblem img {
+            max-width: 260px;
+            width: clamp(200px, 60vw, 260px);
+            height: auto;
+            object-fit: contain;
+            filter: drop-shadow(0 0 22px rgba(255, 255, 255, 0.85)) drop-shadow(0 0 6px rgba(255, 255, 255, 0.95));
+            border: none !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+            background: transparent !important;
         }
         .login-card {
             width: 100%;
@@ -2029,10 +2013,7 @@
     <div class="login-overlay" id="loginOverlay" style="display: flex;">
         <div class="login-wrap">
             <div class="login-emblem">
-                <div class="login-emblem-ring"></div>
-                <div class="login-emblem-inner">
-                    <img src="logo-tran.png" alt="Fashion by Hanin" style="width:38px;height:38px;object-fit:contain;filter:drop-shadow(0 2px 8px rgba(0,0,0,0.6));" onerror="this.src='logo.png'">
-                </div>
+                <img src="Elegant HANIN Wordmark with Flourishes.png" alt="Fashion by Hanin" onerror="this.src='logo-tran.png'">
             </div>
             <div class="login-card">
                 <div class="login-title">Fashion by Hanin</div>
