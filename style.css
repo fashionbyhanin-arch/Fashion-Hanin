@@ -2498,33 +2498,32 @@ img, video {
   position: fixed;
   bottom: 24px;
   right: 24px;
-  height: 52px;
-  padding: 0 20px 0 16px;
-  border-radius: 30px;
-  background: #08080a;
-  color: #ffffff !important;
-  border: 1.5px solid rgba(255, 255, 255, 0.15);
+  width: 54px;
+  height: 54px;
+  padding: 0;
+  border-radius: 50%;
+  background: #14171a;
+  color: #cec4b8 !important;
+  border: 1.5px solid rgba(206, 196, 184, 0.4);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 10px;
+  justify-content: center;
   z-index: 9990;
   transition: var(--transition);
-  font-family: 'Cairo', 'Tajawal', sans-serif;
-  font-weight: 700;
-  font-size: 13.5px;
 }
 
 .chat-fab:hover {
-  transform: translateY(-3px) scale(1.03);
-  background: #18181b;
+  transform: translateY(-3px) scale(1.08);
+  background: #1e2328;
+  border-color: #cec4b8;
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
 }
 
 .chat-fab i {
-  font-size: 18px;
-  color: #ffffff !important;
+  font-size: 22px;
+  color: #cec4b8 !important;
 }
 
 .chat-fab-badge {
