@@ -134,45 +134,26 @@ const FashionDB = {
 
   // ══════════════ PRODUCTS (المنتجات) ══════════════
   async seedInitialProductsIfEmpty() {
-    if (!firestoreDb) return;
-    try {
-      const snap = await firestoreDb.collection('products').limit(1).get();
-      if (snap.empty && typeof PREVIEW_PRODUCTS !== 'undefined' && Array.isArray(PREVIEW_PRODUCTS) && PREVIEW_PRODUCTS.length > 0) {
-        console.log('[FashionDB] 📦 جاري رفع المنتجات التأسيسية إلى Cloud Firestore...');
-        const batch = firestoreDb.batch();
-        PREVIEW_PRODUCTS.forEach(p => {
-          const docRef = firestoreDb.collection('products').doc(p.id);
-          batch.set(docRef, { ...p, createdAt: Date.now() });
-        });
-        await batch.commit();
-        console.log('[FashionDB] ✅ تم رفع المنتجات التأسيسية إلى Firestore بنجاح.');
-      }
-    } catch (e) {
-      console.warn('[FashionDB] تعذر التحقق من المنتجات الأولية في Firestore (تأكد من تفعيل قواعد Firestore):', e.message);
-    }
+    // تم إيقاف إعادة الرفع التلقائي لضمان عدم عودة المنتجات بعد قيام المدير بحذفها
+    return;
   },
 
   onProductsChange(callback) {
     // جلب البيانات المخزنة محلياً أولاً للتحميل الفوري
-    const local = window.PREVIEW_DATA ? window.PREVIEW_DATA.getStoredProducts() : (typeof PREVIEW_PRODUCTS !== 'undefined' ? PREVIEW_PRODUCTS : []);
+    const local = window.PREVIEW_DATA ? window.PREVIEW_DATA.getStoredProducts() : [];
     callback(local);
 
     if (!firestoreDb) return () => {};
 
-    // محاولة رفع المنتجات الأولية إذا كانت المجموعة فارغة
-    this.seedInitialProductsIfEmpty();
-
     // الاستماع الحي والمباشر لـ Firestore
     return firestoreDb.collection('products').onSnapshot(snap => {
-      if (!snap.empty) {
-        const list = [];
-        snap.forEach(doc => {
-          list.push({ id: doc.id, ...doc.data() });
-        });
-        // تحديث الكاش المحلي
-        if (window.PREVIEW_DATA) window.PREVIEW_DATA.saveStoredProducts(list);
-        callback(list);
-      }
+      const list = [];
+      snap.forEach(doc => {
+        list.push({ id: doc.id, ...doc.data() });
+      });
+      // تحديث الكاش المحلي فوراً
+      if (window.PREVIEW_DATA) window.PREVIEW_DATA.saveStoredProducts(list);
+      callback(list);
     }, err => {
       console.warn('[FashionDB] تعذر الاستماع لمنتجات Firestore، العمل بالبيانات المحلية:', err.message);
     });
@@ -199,7 +180,7 @@ const FashionDB = {
   },
 
   async deleteProduct(productId) {
-    // حذف محلي
+    // حذف محلي فوري
     if (window.PREVIEW_DATA) {
       let prods = window.PREVIEW_DATA.getStoredProducts().filter(p => p.id !== productId);
       window.PREVIEW_DATA.saveStoredProducts(prods);

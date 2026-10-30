@@ -106,13 +106,12 @@ function getStoredProducts() {
     const data = localStorage.getItem(STORAGE_KEYS.PRODUCTS);
     if (data !== null) {
       const parsed = JSON.parse(data);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      if (Array.isArray(parsed)) return parsed;
     }
   } catch (e) {
     console.warn("[Preview] Could not parse stored products:", e);
   }
-  saveStoredProducts(PREVIEW_PRODUCTS);
-  return [...PREVIEW_PRODUCTS];
+  return [];
 }
 
 function saveStoredProducts(productsList) {

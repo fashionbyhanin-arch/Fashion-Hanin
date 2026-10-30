@@ -3168,15 +3168,29 @@
                         if (product && product.videoBlobKey) {
                             await deleteStoredVideoBlob(product.videoBlobKey);
                         }
-                        if (window.FashionDB && typeof window.FashionDB.deleteProduct === 'function') {
-                            await window.FashionDB.deleteProduct(key);
-                        } else {
-                            let prods = window.PREVIEW_DATA ? window.PREVIEW_DATA.getStoredProducts() : [];
-                            prods = prods.filter(p => p.id !== key);
-                            if (window.PREVIEW_DATA) window.PREVIEW_DATA.saveStoredProducts(prods);
-                            loadLocalAdminData();
+                        try {
+                            if (window.FashionDB && typeof window.FashionDB.deleteProduct === 'function') {
+                                await window.FashionDB.deleteProduct(key);
+                            }
+                            // تحديث محلي فوري وشامل
+                            if (window.PREVIEW_DATA) {
+                                let prods = window.PREVIEW_DATA.getStoredProducts();
+                                prods = prods.filter(p => p.id !== key);
+                                window.PREVIEW_DATA.saveStoredProducts(prods);
+                            }
+                            delete allProducts[key];
+                            delete allProductsData[key];
+                            const remaining = Object.keys(allProducts).length;
+                            const statP = document.getElementById('statProducts');
+                            if (statP) statP.innerText = remaining;
+                            const countEl = document.getElementById('productsCount');
+                            if (countEl) countEl.innerText = remaining + ' منتج';
+                            renderProductsList(allProducts);
+                            showToast('تم حذف المنتج بنجاح');
+                        } catch (err) {
+                            console.error('Delete product error:', err);
+                            showToast('خطأ أثناء حذف المنتج: ' + (err.message || 'فشلت العملية'), 'error');
                         }
-                        showToast('تم حذف المنتج بنجاح');
                     });
                 });
             });
