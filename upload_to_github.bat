@@ -1,13 +1,13 @@
 @echo off
 chcp 65001 >nul
 echo ========================================================
-echo    جاري رفع متجر CROWN إلى GitHub Pages...
+echo    جاري رفع متجر Fashion Hanin إلى GitHub Pages...
 echo ========================================================
 cd /d "%~dp0"
 git config user.name "Gt2433"
 git config user.email "gt2433@users.noreply.github.com"
 git add .
-git commit -m "Deploy CROWN Store to GitHub Pages"
+git commit -m "Deploy Fashion Hanin Store to GitHub Pages"
 git branch -M main
 git remote remove origin 2>nul
 git remote add origin https://github.com/Gt2433/stores.git
