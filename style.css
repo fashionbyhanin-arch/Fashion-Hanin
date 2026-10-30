@@ -21,21 +21,33 @@
 }
 
 :root {
-  /* Brand Luxury Palette */
-  --color-black: #08080a;
-  --color-black-pure: #000000;
-  --color-surface-dark: #121217;
+  /* Brand Luxury Palette — Fashion by Hanin (Derived from Official Logo) */
+  --color-black: #14171a;
+  --color-black-pure: #0c0e10;
+  --color-surface-dark: #1e2328;
   --color-surface-card: #ffffff;
   --color-white: #ffffff;
-  --color-bg-light: #f7f6f2;
-  --color-border: #e6e4dc;
-  --color-border-dark: rgba(255, 255, 255, 0.08);
-  --color-gold: #c5a059;
-  --color-gold-hover: #b08a3f;
-  --color-gold-light: #fdfaf3;
-  --color-gold-glow: rgba(197, 160, 89, 0.25);
-  --color-text-main: #18181b;
-  --color-text-muted: #71717a;
+  --color-bg-light: #f8f6f2;
+  --color-border: #e6ded4;
+  --color-border-dark: rgba(206, 196, 184, 0.16);
+
+  /* Logo Palette: Warm Nude Sand Taupe & Charcoal Noir */
+  --color-sand: #cec4b8;
+  --color-sand-hover: #bdae9e;
+  --color-sand-dark: #9b8a78;
+  --color-sand-light: #faf7f2;
+  --color-charcoal: #1e2328;
+  --color-charcoal-deep: #14171a;
+
+  /* Theme Accent Colors */
+  --color-gold: #c2af98;
+  --color-gold-hover: #ad9982;
+  --color-gold-light: #faf7f2;
+  --color-gold-glow: rgba(194, 175, 152, 0.32);
+  --gold: #c2af98;
+
+  --color-text-main: #1e2328;
+  --color-text-muted: #736d64;
   --color-red: #ef4444;
   --color-green: #10b981;
 
@@ -474,8 +486,8 @@ img, video {
 }
 
 .btn-white:hover {
-  background: linear-gradient(135deg, var(--color-gold-hover) 0%, var(--color-gold) 100%);
-  color: #08080a;
+  background: linear-gradient(135deg, var(--color-sand) 0%, var(--color-sand-hover) 100%);
+  color: var(--color-charcoal);
   transform: translateY(-3px);
   box-shadow: 0 12px 35px var(--color-gold-glow);
 }
