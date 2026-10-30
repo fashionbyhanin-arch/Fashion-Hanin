@@ -1570,6 +1570,69 @@
                 font-size: 16px;
             }
         }
+        @media (max-width: 768px) {
+            .top-header {
+                height: 52px;
+                padding: 0 10px;
+                gap: 8px;
+            }
+            .header-left {
+                gap: 8px;
+                min-width: 0;
+                flex-shrink: 1;
+                overflow: hidden;
+            }
+            .header-logo {
+                width: 30px !important;
+                height: 30px !important;
+                flex-shrink: 0;
+            }
+            .header-brand {
+                font-size: 13px !important;
+                letter-spacing: 0.5px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            .header-title {
+                display: none !important;
+            }
+            .header-right {
+                gap: 6px;
+                flex-shrink: 0;
+            }
+            .header-store-btn {
+                width: 32px;
+                height: 32px;
+                font-size: 12px;
+                border-radius: 8px;
+            }
+            .header-chat-btn {
+                display: none !important;
+            }
+            .header-user {
+                padding: 0;
+                gap: 4px;
+                background: transparent;
+                border: none;
+            }
+            .header-username {
+                display: none !important;
+            }
+            .header-avatar {
+                width: 28px;
+                height: 28px;
+                font-size: 11px;
+            }
+            .header-logout {
+                width: 28px;
+                height: 28px;
+                font-size: 11px;
+                background: var(--surface2);
+                border: 1px solid var(--border);
+                color: var(--text-secondary);
+            }
+        }
         @media (max-width: 480px) {
             .stats-grid {
                 grid-template-columns: 1fr 1fr;
@@ -1583,12 +1646,6 @@
             }
             .thumbnails-grid {
                 grid-template-columns: repeat(3, 1fr);
-            }
-            .header-brand {
-                font-size: 13px;
-            }
-            .header-title {
-                display: none;
             }
             .page-title {
                 font-size: 17px;
@@ -1615,16 +1672,6 @@
             .btn-icon-sm {
                 width: 28px;
                 height: 28px;
-                font-size: 10px;
-            }
-            .inventory-grid {
-                grid-template-columns: 1fr;
-                gap: 6px;
-            }
-            .header-user {
-                padding: 3px 8px 3px 4px;
-            }
-            .header-username {
                 font-size: 10px;
             }
         }
@@ -2111,7 +2158,7 @@
                 <button class="header-store-btn" id="themeToggleBtn" title="تبديل المظهر (مضيء / مظلم)" onclick="toggleAdminTheme()">
                     <i class="fas fa-sun" id="themeToggleIcon"></i>
                 </button>
-                <button class="header-store-btn" title="المحادثات المباشرة للزبائن" onclick="showSection('chats')" style="position:relative;">
+                <button class="header-store-btn header-chat-btn" title="المحادثات المباشرة للزبائن" onclick="showSection('chats')" style="position:relative;">
                     <i class="fas fa-comments"></i>
                     <span class="nav-badge" id="headerChatsBadge" style="display:none;position:absolute;top:-4px;right:-4px;min-width:16px;height:16px;font-size:10px;line-height:16px;padding:0 4px;">0</span>
                 </button>
