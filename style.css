@@ -440,11 +440,16 @@ img, video {
 }
 
 .brand-logo-hero {
-  max-width: 140px;
-  width: 32%;
+  max-width: 220px;
+  width: 45%;
+  height: auto;
   margin: 0 auto 16px;
   display: block;
-  filter: drop-shadow(0 4px 16px rgba(0,0,0,0.6));
+  object-fit: contain;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.85)) drop-shadow(0 0 5px rgba(255, 255, 255, 0.9));
 }
 
 .hero-brand-name {
