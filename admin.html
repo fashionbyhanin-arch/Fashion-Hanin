@@ -2501,8 +2501,8 @@
         function initCloudinaryInputs() {
             const nameInput = document.getElementById('settingCloudinaryName');
             const presetInput = document.getElementById('settingCloudinaryPreset');
-            if (nameInput) nameInput.value = localStorage.getItem('fashion_hanin_cloudinary_name') || '';
-            if (presetInput) presetInput.value = localStorage.getItem('fashion_hanin_cloudinary_preset') || '';
+            if (nameInput) nameInput.value = localStorage.getItem('fashion_hanin_cloudinary_name') || (window.FashionDB?.cloudinary?.cloudName || 'vunqsror');
+            if (presetInput) presetInput.value = localStorage.getItem('fashion_hanin_cloudinary_preset') || (window.FashionDB?.cloudinary?.uploadPreset || 'fashion hanin');
         }
 
         function saveCloudinarySettings() {

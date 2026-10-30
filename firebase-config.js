@@ -22,7 +22,7 @@ const firebaseConfig = {
 // 2. إعدادات Cloudinary (يمكن تعديلها من لوحة التحكم أو حفظها في التخزين)
 const CLOUDINARY_DEFAULTS = {
   cloudName: localStorage.getItem('fashion_hanin_cloudinary_name') || 'vunqsror',
-  uploadPreset: localStorage.getItem('fashion_hanin_cloudinary_preset') || 'fashion_hanin'
+  uploadPreset: localStorage.getItem('fashion_hanin_cloudinary_preset') || 'fashion hanin'
 };
 
 // 3. تهيئة خدمات Firebase
@@ -80,7 +80,6 @@ const FashionDB = {
       const formData = new FormData();
       formData.append('file', file);
       formData.append('upload_preset', uploadPreset);
-      formData.append('folder', 'fashion_by_hanin');
 
       try {
         const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
