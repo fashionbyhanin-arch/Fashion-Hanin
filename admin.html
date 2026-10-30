@@ -2172,10 +2172,6 @@
                                 <div class="field"><label>السعر (دج) *</label><input class="f-input" id="pPrice" type="number" oninput="updateLivePreview()"></div>
                                 <div class="field"><label>الوصف</label><textarea class="f-textarea" id="pDesc" rows="3"></textarea></div>
                             </div>
-                            <div class="card"><div class="card-header"><div class="card-icon"><i class="fas fa-warehouse"></i></div><div><div class="card-title">المخزون</div></div></div>
-                                <div class="inventory-grid"><div class="inventory-box real"><div class="inv-label"><i class="fas fa-eye-slash"></i> الكمية الحقيقية</div><input class="inv-input" type="number" id="realQuantity" value="0" min="0"></div><div class="inventory-box"><div class="inv-label"><i class="fas fa-eye"></i> الكمية المعروضة</div><input class="inv-input" type="number" id="displayQuantity" value="0" min="0"></div></div>
-                                <div class="toggle-row"><div class="toggle-info"><div class="toggle-label">إظهار الكمية</div></div><label class="toggle-switch"><input type="checkbox" id="showQuantityToggle" checked><div class="toggle-track"><div class="toggle-thumb"></div></div></label></div>
-                            </div>
                             <div class="card"><div class="card-header"><div class="card-icon"><i class="fas fa-palette"></i></div><div><div class="card-title">الألوان</div><div class="card-subtitle">أضف خيارات ألوان المنتج</div></div></div>
     <div style="font-size:11px;font-weight:700;color:var(--text-secondary);margin-bottom:8px;">الألوان المضافة للمنتج:</div>
     <div class="colors-wrap" id="colorsGrid" style="display:flex;gap:8px;flex-wrap:wrap;min-height:36px;align-items:center;margin-bottom:12px;"></div>
@@ -2994,9 +2990,9 @@
             if (document.getElementById('pPrice2')) document.getElementById('pPrice2').value = product.price2 || '';
             if (document.getElementById('pPrice3')) document.getElementById('pPrice3').value = product.price3 || '';
             document.getElementById('pDesc').value = product.description || '';
-            document.getElementById('realQuantity').value = product.realQuantity || 0;
-            document.getElementById('displayQuantity').value = product.displayQuantity || 0;
-            document.getElementById('showQuantityToggle').checked = product.showQuantity !== false;
+            if (document.getElementById('realQuantity')) document.getElementById('realQuantity').value = product.realQuantity || 0;
+            if (document.getElementById('displayQuantity')) document.getElementById('displayQuantity').value = product.displayQuantity || 0;
+            if (document.getElementById('showQuantityToggle')) document.getElementById('showQuantityToggle').checked = product.showQuantity !== false;
             selectedColors = (product.colors || []).map(c => {
                 const rawHex = typeof c === 'string' ? c : (c.hex || c.name || '#000000');
                 const rawName = typeof c === 'string' ? c : (c.name || c.hex || 'لون');
@@ -3096,9 +3092,9 @@
                     price2: parseFloat(document.getElementById('pPrice2')?.value) || 0,
                     price3: parseFloat(document.getElementById('pPrice3')?.value) || 0,
                     description: document.getElementById('pDesc').value.trim(),
-                    realQuantity: parseInt(document.getElementById('realQuantity').value) || 0,
-                    displayQuantity: parseInt(document.getElementById('displayQuantity').value) || 0,
-                    showQuantity: document.getElementById('showQuantityToggle').checked,
+                    realQuantity: parseInt(document.getElementById('realQuantity')?.value) || 0,
+                    displayQuantity: parseInt(document.getElementById('displayQuantity')?.value) || 0,
+                    showQuantity: document.getElementById('showQuantityToggle') ? document.getElementById('showQuantityToggle').checked : true,
                     colors: cleanColors,
                     sizes: selectedSizes || [],
                     images: allImgs.length ? allImgs : (mainImage ? [mainImage] : []),
