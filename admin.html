@@ -2228,69 +2228,40 @@
                 <!-- Settings Section -->
                 <div class="section" id="section-settings">
                     <div class="page-header">
-                        <h2 class="page-title">الإعدادات</h2>
+                        <h2 class="page-title">إعدادات المتجر</h2>
                     </div>
                     <div class="card">
                         <div class="card-header">
-                            <div class="card-icon"><i class="fas fa-video"></i></div>
+                            <div class="card-icon"><i class="fas fa-store"></i></div>
                             <div>
-                                <div class="card-title">فيديو الخلفية (Hero)</div>
-                                <div class="card-subtitle">الفيديو الذي يظهر في أعلى الصفحة الرئيسية</div>
+                                <div class="card-title">معلومات وتخصيص المتجر</div>
+                                <div class="card-subtitle">بيانات الهوية وتصميم الواجهة لـ Fashion by Hanin</div>
                             </div>
                         </div>
-
-                        <!-- Current Video Preview -->
-                        <div id="heroVideoPreviewWrap" style="display:none; margin-bottom:16px;">
-                            <div style="font-size:10px;font-weight:700;color:#888;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px;">الفيديو الحالي</div>
-                            <div style="position:relative;border-radius:12px;overflow:hidden;background:#111;border:1px solid #2a2a2f;">
-                                <video id="heroVideoPreview" style="width:100%;max-height:220px;object-fit:cover;display:block;" autoplay muted loop playsinline></video>
-                                <div style="position:absolute;top:8px;left:8px;display:flex;gap:6px;">
-                                    <button class="btn btn-red btn-icon-sm" onclick="deleteHeroVideo()" title="حذف الفيديو">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </div>
-                                <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.7));padding:8px 12px;">
-                                    <div id="heroVideoUrlDisplay" style="font-size:10px;color:#aaa;direction:ltr;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></div>
-                                </div>
+                        <div style="padding:12px 4px; font-size:13.5px; color:var(--text-secondary); line-height:2;">
+                            <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--border);">
+                                <span>اسم العلامة التجارية:</span>
+                                <strong style="color:var(--text); font-family:'Cinzel', serif;">Fashion by Hanin</strong>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--border);">
+                                <span>النشاط التجاري:</span>
+                                <strong style="color:var(--text);">أزياء وموضة راقية</strong>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--border);">
+                                <span>شعار الواجهة (Hero):</span>
+                                <strong style="color:var(--accent);">مخطوطة HANIN الفاخرة المضيئة</strong>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--border);">
+                                <span>خلفية الواجهة:</span>
+                                <span style="background:rgba(16, 185, 129, 0.15); color:#10b981; padding:3px 10px; border-radius:12px; font-size:12px; font-weight:700;">خلفية متدرجة ثابتة فائقة السرعة</span>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0;">
+                                <span>نظام التخزين المحلي:</span>
+                                <span style="color:var(--text);">مستقل بالكامل (Client-side Data Layer)</span>
                             </div>
                         </div>
-
-                        <!-- No Video State -->
-                        <div id="heroVideoEmpty" style="text-align:center;padding:16px 0;color:#555;font-size:13px;margin-bottom:16px;">
-                            <i class="fas fa-film" style="font-size:28px;color:#333;display:block;margin-bottom:8px;"></i>
-                            لا يوجد فيديو مخصص – يتم استخدام الفيديو الافتراضي (hero.mp4)
-                        </div>
-
-                        <!-- Upload Zone -->
-                        <div style="font-size:10px;font-weight:700;color:#888;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px;">رفع فيديو جديد</div>
-                        <div class="upload-zone" id="heroVideoUploadZone" onclick="document.getElementById('heroVideoFileInput').click()" style="margin-bottom:12px;">
-                            <i class="upload-icon fas fa-cloud-upload-alt"></i>
-                            <p>اضغط لرفع فيديو</p>
-                            <small>MP4, WebM — الحد الأقصى 100MB</small>
-                        </div>
-                        <input type="file" id="heroVideoFileInput" accept="video/mp4,video/webm" style="display:none" onchange="handleHeroVideoUpload(this.files)">
-
-                        <!-- Upload Progress -->
-                        <div id="heroVideoProgress" style="display:none;margin-bottom:12px;">
-                            <div style="display:flex;align-items:center;gap:10px;">
-                                <div style="flex:1;background:var(--surface3);border:1px solid var(--border);border-radius:20px;height:7px;overflow:hidden;">
-                                    <div id="heroVideoProgressBar" style="height:100%;background:var(--accent);border-radius:20px;width:0%;transition:width 0.3s;"></div>
-                                </div>
-                                <span id="heroVideoProgressText" style="font-size:11px;color:var(--text-secondary);min-width:35px;text-align:left;">0%</span>
-                            </div>
-                        </div>
-
-                        <!-- Direct URL Option -->
-                        <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border);">
-                            <div style="font-size:10px;font-weight:700;color:var(--text-secondary);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px;">أو إدخال مسار أو رابط فيديو مباشر (URL / File)</div>
-                            <div style="display:flex;gap:8px;">
-                                <input type="text" id="heroVideoUrlInput" placeholder="مثال: hero.mp4 أو رابط فيديو مباشر https://..." style="flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-xs);padding:8px 12px;color:var(--text);font-size:12px;">
-                                <button type="button" class="btn btn-black btn-sm" onclick="saveHeroVideoUrl()"><i class="fas fa-save"></i> حفظ الرابط</button>
-                            </div>
-                        </div>
-                        </div>
-
                     </div>
+                </div>
 
                     <!-- Orders Section -->
                 <div class="section" id="section-orders">
@@ -3636,60 +3607,8 @@
         updateLivePreview();
         checkAuth();
         initAdminChatsListener();
-        initAdminHeroVideo();
         ['pName', 'pPrice', 'pOldPrice'].forEach(id => document.getElementById(id)?.addEventListener('input',
             updateLivePreview));
-
-        // ══════ HERO VIDEO MANAGEMENT (IndexedDB & LocalStorage Sync) ══════
-        let currentHeroVideoUrl = '';
-        let currentAdminBlobUrl = null;
-
-
-        function updateHeroVideoPreview(url, label) {
-            const previewWrap = document.getElementById('heroVideoPreviewWrap');
-            const emptyState = document.getElementById('heroVideoEmpty');
-            const videoEl = document.getElementById('heroVideoPreview');
-            const urlDisplay = document.getElementById('heroVideoUrlDisplay');
-
-            if (url) {
-                previewWrap.style.display = 'block';
-                emptyState.style.display = 'none';
-                videoEl.src = url;
-                videoEl.load();
-                videoEl.play().catch(() => {});
-                urlDisplay.textContent = label || url;
-            } else {
-                previewWrap.style.display = 'none';
-                emptyState.style.display = 'block';
-                videoEl.src = '';
-                urlDisplay.textContent = '';
-            }
-        }
-
-        async function initAdminHeroVideo() {
-            try {
-                const raw = localStorage.getItem('fashion_hanin_store_settings');
-                if (raw) {
-                    const settings = JSON.parse(raw);
-                    if (settings.type === 'blob') {
-                        const blob = await getStoredVideoBlob('hero_video_blob');
-                        if (blob) {
-                            if (currentAdminBlobUrl) {
-                                try { URL.revokeObjectURL(currentAdminBlobUrl); } catch(e) {}
-                            }
-                            currentAdminBlobUrl = URL.createObjectURL(blob);
-                            updateHeroVideoPreview(currentAdminBlobUrl, settings.fileName || 'ملف فيديو مخصص');
-                            return;
-                        }
-                    } else if (settings.url) {
-                        updateHeroVideoPreview(settings.url, settings.url);
-                        return;
-                    }
-                }
-            } catch(e) {}
-            // الافتراضي
-            updateHeroVideoPreview('hero.mp4', 'hero.mp4 (الفيديو الافتراضي)');
-        }
 
         // ══════ PRODUCT VIDEO UPLOAD ══════
         function updateProductVideoPreview(url) {
@@ -3768,84 +3687,6 @@
                     if (progressWrap) progressWrap.style.display = 'none';
                 }, 500);
                 document.getElementById('productVideoFileInput').value = '';
-            }
-        }
-
-        async function handleHeroVideoUpload(files) {
-            if (!files || !files.length) return;
-            const file = files[0];
-            const progressWrap = document.getElementById('heroVideoProgress');
-            const progressBar = document.getElementById('heroVideoProgressBar');
-            const progressText = document.getElementById('heroVideoProgressText');
-
-            if (progressWrap) progressWrap.style.display = 'block';
-            if (progressBar) progressBar.style.width = '30%';
-            if (progressText) progressText.innerText = '30%';
-
-            try {
-                if (progressBar) progressBar.style.width = '65%';
-                if (progressText) progressText.innerText = '65%';
-
-                await saveStoredVideoBlob('hero_video_blob', file);
-
-                localStorage.setItem('fashion_hanin_store_settings', JSON.stringify({
-                    type: 'blob',
-                    fileName: file.name,
-                    updatedAt: Date.now()
-                }));
-
-                if (progressBar) progressBar.style.width = '100%';
-                if (progressText) progressText.innerText = '100%';
-
-                if (currentAdminBlobUrl) {
-                    try { URL.revokeObjectURL(currentAdminBlobUrl); } catch(e) {}
-                }
-                currentAdminBlobUrl = URL.createObjectURL(file);
-                updateHeroVideoPreview(currentAdminBlobUrl, file.name);
-                showToast('✅ تم حفظ الفيديو بنجاح وتحديث واجهة المتجر!');
-            } catch(e) {
-                console.error(e);
-                showToast('❌ خطأ في حفظ الفيديو', 'error');
-            } finally {
-                setTimeout(() => {
-                    if (progressWrap) progressWrap.style.display = 'none';
-                    if (progressBar) progressBar.style.width = '0%';
-                }, 700);
-                document.getElementById('heroVideoFileInput').value = '';
-            }
-        }
-
-        async function saveHeroVideoUrl() {
-            const input = document.getElementById('heroVideoUrlInput');
-            const url = (input ? input.value : '').trim();
-            if (!url) {
-                showToast('يرجى إدخال رابط أو مسار الفيديو', 'error');
-                return;
-            }
-            try {
-                await deleteStoredVideoBlob('hero_video_blob');
-                localStorage.setItem('fashion_hanin_store_settings', JSON.stringify({
-                    type: 'url',
-                    url: url,
-                    updatedAt: Date.now()
-                }));
-                updateHeroVideoPreview(url, url);
-                if (input) input.value = '';
-                showToast('✅ تم حفظ رابط الفيديو وتحديث واجهة المتجر!');
-            } catch (e) {
-                showToast('❌ خطأ: ' + e.message, 'error');
-            }
-        }
-
-        async function deleteHeroVideo() {
-            if (!confirm('هل أنت متأكد من حذف الفيديو المخصص؟ سيتم الرجوع إلى الفيديو الافتراضي (hero.mp4).')) return;
-            try {
-                await deleteStoredVideoBlob('hero_video_blob');
-                localStorage.removeItem('fashion_hanin_store_settings');
-                updateHeroVideoPreview('hero.mp4', 'hero.mp4 (الافتراضي)');
-                showToast('تمت استعادة الفيديو الافتراضي (hero.mp4)');
-            } catch (e) {
-                showToast('❌ خطأ: ' + e.message, 'error');
             }
         }
 

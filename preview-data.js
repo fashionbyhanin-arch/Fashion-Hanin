@@ -248,9 +248,9 @@ function saveStoredChats(chatsList) {
 function getStoredSettings() {
   try {
     const s = localStorage.getItem(STORAGE_KEYS.SETTINGS);
-    return s ? JSON.parse(s) : { heroVideo: 'hero.mp4', isDemo: true };
+    return s ? JSON.parse(s) : { isDemo: true };
   } catch (e) {
-    return { heroVideo: 'hero.mp4', isDemo: true };
+    return { isDemo: true };
   }
 }
 

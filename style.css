@@ -385,35 +385,28 @@ img, video {
 
 /* ===== HERO SECTION ===== */
 .hero {
-  background: #08080a;
+  background: radial-gradient(circle at 50% 35%, #252b32 0%, #1a1e23 45%, #121518 85%, #0c0e10 100%);
   min-height: 480px;
-  padding: 80px 24px 70px;
+  padding: 85px 24px 75px;
   text-align: center;
   position: relative;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
+  border-bottom: 1px solid rgba(206, 196, 184, 0.15);
 }
 
 .hero::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 50% 40%, rgba(0, 0, 0, 0.22) 0%, rgba(8, 8, 10, 0.65) 85%);
+  background: 
+    radial-gradient(circle at 50% 30%, rgba(206, 196, 184, 0.08) 0%, transparent 60%),
+    radial-gradient(circle at 80% 80%, rgba(194, 175, 152, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 20% 90%, rgba(206, 196, 184, 0.04) 0%, transparent 50%);
   z-index: 1;
   pointer-events: none;
-}
-
-.hero-video {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: 0;
-  opacity: 0.88;
-  filter: saturate(1.1) brightness(1.05);
 }
 
 .hero-content {

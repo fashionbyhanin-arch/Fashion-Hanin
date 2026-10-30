@@ -92,7 +92,6 @@
 
 <!-- HERO -->
 <section class="hero">
-  <video class="hero-video" id="heroVideo" autoplay muted loop playsinline src="hero.mp4" style="display:block;"></video>
   <div class="hero-content">
     <div class="hero-badge" style="border:1px solid #cec4b8; color:#cec4b8; background:rgba(206,196,184,0.12);"><i class="fas fa-sparkles" style="color:#cec4b8;"></i> تشكيلة Fashion by Hanin الحصرية 2026</div>
     <img src="Elegant HANIN Wordmark with Flourishes.png" alt="Fashion by Hanin" class="brand-logo-hero" style="max-width:320px; width:clamp(240px, 60%, 340px); height:auto; object-fit:contain; border:none; border-radius:0; box-shadow:none; filter:drop-shadow(0 0 22px rgba(255,255,255,0.85)) drop-shadow(0 0 6px rgba(255,255,255,0.95));" onerror="this.src='logo-tran.png'">
@@ -2041,69 +2040,6 @@
   populateWilayas();
   updateCartUI();
   updateFavoritesUI();
-
-  // ══════ DYNAMIC HERO VIDEO (IndexedDB & LocalStorage Sync) ══════
-  let currentHeroVideoUrl = null;
-  let currentHeroBlobUrl = null;
-
-
-  function setHeroVideoSrc(url) {
-    const video = document.getElementById('heroVideo');
-    if (!video) return;
-    if (!url) {
-      video.style.display = 'none';
-      video.src = '';
-      currentHeroVideoUrl = null;
-      return;
-    }
-    if (currentHeroVideoUrl === url) return;
-    currentHeroVideoUrl = url;
-    video.src = url;
-    video.style.display = 'block';
-    video.muted = true;
-    video.defaultMuted = true;
-    video.setAttribute('muted', '');
-    video.setAttribute('playsinline', '');
-    video.load();
-    const p = video.play();
-    if (p !== undefined) p.catch(() => {});
-  }
-
-  async function updateActiveHeroVideo() {
-    try {
-      const rawSettings = localStorage.getItem('fashion_hanin_store_settings');
-      if (rawSettings) {
-        const settings = JSON.parse(rawSettings);
-        if (settings.type === 'blob') {
-          const blob = await getStoredVideoBlob('hero_video_blob');
-          if (blob) {
-            if (currentHeroBlobUrl) {
-              try { URL.revokeObjectURL(currentHeroBlobUrl); } catch(e) {}
-            }
-            currentHeroBlobUrl = URL.createObjectURL(blob);
-            setHeroVideoSrc(currentHeroBlobUrl);
-            return;
-          }
-        } else if (settings.url) {
-          setHeroVideoSrc(settings.url);
-          return;
-        }
-      }
-    } catch(e) {
-      console.warn('Error loading dynamic hero video:', e);
-    }
-    setHeroVideoSrc('hero.mp4');
-  }
-
-  // تحميل ومزامنة الفيديو فورياً
-  updateActiveHeroVideo();
-
-  // الاستماع لأي تغيير يتم من لوحة التحكم في تبويب آخر
-  window.addEventListener('storage', (e) => {
-    if (e.key === 'fashion_hanin_store_settings') {
-      updateActiveHeroVideo();
-    }
-  });
 
   function escapeHtml(str) { return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 </script>
