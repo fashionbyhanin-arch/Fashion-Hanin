@@ -1,8 +1,8 @@
 /* =============================================
-   CROWN – Service Worker (Client Preview Mode)
+   Fashion by Hanin – Service Worker (Client Preview Mode)
    ============================================= */
 
-const CACHE_NAME = 'crown-preview-v3';
+const CACHE_NAME = 'fashion-hanin-preview-v1';
 
 // ===== INSTALL =====
 self.addEventListener('install', event => {
@@ -24,4 +24,3 @@ self.addEventListener('fetch', event => {
     fetch(event.request).catch(() => caches.match(event.request))
   );
 });
-

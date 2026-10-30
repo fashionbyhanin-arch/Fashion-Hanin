@@ -68,7 +68,7 @@ function showToast(msg) {
 function updateCartBadge() {
   const badge = document.getElementById('cartBadge');
   if (badge) badge.textContent = cart.reduce((sum, i) => sum + i.qty, 0);
-  localStorage.setItem('crown_cart', JSON.stringify(cart));
+  localStorage.setItem('fashion_hanin_cart', JSON.stringify(cart));
 }
 
 // ==================== RENDER PRODUCT CARDS ====================
@@ -117,7 +117,7 @@ function renderProductDetailPage() {
   currentProduct = { ...PRODUCTS[productId] };
   const p = currentProduct;
 
-  document.title = `CROWN – ${p.name}`;
+  document.title = `Fashion by Hanin – ${p.name}`;
 
   // Gallery
   let thumbsHtml = '';
@@ -283,7 +283,7 @@ function renderProductDetailPage() {
 
     const selectedColor = document.querySelector('.color-swatch.active')?.dataset.color || p.colors[0].name;
 
-    const msg = `🛍 طلب جديد – CROWN\n\n👤 الاسم: ${name}\n📞 الهاتف: ${phone}\n📍 ${wilaya} – ${commune}\n🏠 ${address}\n🚚 التوصيل: ${delivery === 'home' ? 'منزلي' : 'مكتب البريد'}\n💳 الدفع: ${payment === 'cod' ? 'عند الاستلام' : 'تحويل CCP'}\n\n🛒 المنتج: ${currentProduct.name}\n🎨 اللون: ${selectedColor}\n📐 المقاس: ${selectedSize}\n💰 السعر: ${currentProduct.price.toLocaleString()} ${currentProduct.currency}`;
+    const msg = `🛍 طلب جديد – Fashion by Hanin\n\n👤 الاسم: ${name}\n📞 الهاتف: ${phone}\n📍 ${wilaya} – ${commune}\n🏠 ${address}\n🚚 التوصيل: ${delivery === 'home' ? 'منزلي' : 'مكتب البريد'}\n💳 الدفع: ${payment === 'cod' ? 'عند الاستلام' : 'تحويل CCP'}\n\n🛒 المنتج: ${currentProduct.name}\n🎨 اللون: ${selectedColor}\n📐 المقاس: ${selectedSize}\n💰 السعر: ${currentProduct.price.toLocaleString()} ${currentProduct.currency}`;
 
     const submitBtn = document.getElementById('submitOrderBtn');
     submitBtn.textContent = 'جاري الإرسال...';
@@ -330,7 +330,7 @@ function renderProductDetailPage() {
 
 // ==================== INIT ====================
 document.addEventListener('DOMContentLoaded', () => {
-  const savedCart = localStorage.getItem('crown_cart');
+  const savedCart = localStorage.getItem('fashion_hanin_cart');
   if (savedCart) {
     try { cart = JSON.parse(savedCart); } catch(e) { cart = []; }
   }

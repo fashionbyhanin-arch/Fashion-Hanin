@@ -1,7 +1,7 @@
 {
-  "name": "CROWN Luxury Menswear",
-  "short_name": "CROWN",
-  "description": "متجر CROWN للأزياء الرجالية الفاخرة",
+  "name": "Fashion by Hanin",
+  "short_name": "Fashion by Hanin",
+  "description": "متجر Fashion by Hanin للأزياء والموضة الفاخرة",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

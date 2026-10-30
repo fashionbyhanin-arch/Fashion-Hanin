@@ -1,15 +1,15 @@
 /**
  * ========================================================
- * CROWN — متجر الأزياء الرجالية الفاخرة (Preview Data Layer)
+ * Fashion by Hanin — متجر الأزياء والموضة (Preview Data Layer)
  * ========================================================
  * طبقة بيانات وتخزين محلي 100% Client-side ومعزولة تماماً.
  */
 
 const PREVIEW_PRODUCTS = [
   {
-    id: "crown_p1",
+    id: "hanin_p1",
     name: "طقم كاجوال سليم فيت / جيم (Slim Fit T-Shirt + Jogger)",
-    subtitle: "CROWN Premium Casual",
+    subtitle: "Fashion by Hanin Casual",
     price: 3600,
     oldPrice: 4200,
     price2: 3400,
@@ -24,9 +24,9 @@ const PREVIEW_PRODUCTS = [
     videoUrl: ""
   },
   {
-    id: "crown_p2",
+    id: "hanin_p2",
     name: "طقم هودي مريح فاخر (Premium Hoodie & Jogger)",
-    subtitle: "CROWN Winter Collection",
+    subtitle: "Fashion by Hanin Winter Collection",
     price: 5000,
     oldPrice: 5800,
     price2: 4800,
@@ -43,9 +43,9 @@ const PREVIEW_PRODUCTS = [
     videoUrl: ""
   },
   {
-    id: "crown_p3",
+    id: "hanin_p3",
     name: "طقم ستريت وير أسود بالكامل (All Black Street Outfit)",
-    subtitle: "CROWN Streetwear",
+    subtitle: "Fashion by Hanin Streetwear",
     price: 3600,
     oldPrice: 4400,
     price2: 3400,
@@ -60,9 +60,9 @@ const PREVIEW_PRODUCTS = [
     videoUrl: ""
   },
   {
-    id: "crown_p4",
+    id: "hanin_p4",
     name: "طقم كلاسيك فاخر أول بلاك (All Black Old Money Set)",
-    subtitle: "CROWN Luxury Formal",
+    subtitle: "Fashion by Hanin Luxury Formal",
     price: 5500,
     oldPrice: 6700,
     price2: 5200,
@@ -80,7 +80,7 @@ const PREVIEW_PRODUCTS = [
 
 const INITIAL_DEMO_ORDERS = [
   {
-    id: "ord_crown_101",
+    id: "ord_hanin_101",
     name: "حمزة بن عمار",
     phone: "0550112233",
     wilaya: "16 - الجزائر",
@@ -100,10 +100,10 @@ const INITIAL_DEMO_ORDERS = [
 
 const INITIAL_DEMO_CHATS = [
   {
-    id: 'chat_crown_1',
+    id: 'chat_hanin_1',
     customerName: 'كريم بلحاج',
     customerPhone: '0662112233',
-    orderId: 'ord_crown_101',
+    orderId: 'ord_hanin_101',
     orderTotal: 5500,
     lastMessage: 'السلام عليكم، هل مقاس L متوفر في طقم أولد موني الكلاسيك؟',
     lastMessageTime: Date.now() - 3600000,
@@ -114,7 +114,7 @@ const INITIAL_DEMO_CHATS = [
     ]
   },
   {
-    id: 'chat_crown_2',
+    id: 'chat_hanin_2',
     customerName: 'سفيان مرابط',
     customerPhone: '0555889900',
     orderId: '',
@@ -129,24 +129,16 @@ const INITIAL_DEMO_CHATS = [
 ];
 
 const STORAGE_KEYS = {
-  PRODUCTS: 'crown_store_products',
-  ORDERS: 'crown_store_orders',
-  CHATS: 'crown_store_chats',
-  SETTINGS: 'crown_store_settings'
+  PRODUCTS: 'fashion_hanin_store_products',
+  ORDERS: 'fashion_hanin_store_orders',
+  CHATS: 'fashion_hanin_store_chats',
+  SETTINGS: 'fashion_hanin_store_settings'
 };
 
-// تصفير أي بيانات قديمة كانت تخص المتجر السابق لضمان ظهور متجر CROWN بنسبة 100%
+// تصفير وتهيئة التخزين المعزول لمتجر Fashion by Hanin
 try {
-  if (!localStorage.getItem('crown_store_clean_v3')) {
-    localStorage.setItem('crown_store_clean_v3', '1');
-    localStorage.removeItem('mh_preview_products');
-    localStorage.removeItem('mh_preview_orders');
-    localStorage.removeItem('mh_preview_chats');
-    localStorage.removeItem('mh_preview_settings');
-    localStorage.removeItem('mhmanwir_cart');
-    localStorage.removeItem('mhmanwir_products');
-    localStorage.removeItem('crown_store_products');
-    localStorage.removeItem('crown_favorites');
+  if (!localStorage.getItem('fashion_hanin_clean_v1')) {
+    localStorage.setItem('fashion_hanin_clean_v1', '1');
     localStorage.setItem(STORAGE_KEYS.PRODUCTS, JSON.stringify(PREVIEW_PRODUCTS));
   }
 } catch(e) {}
@@ -285,18 +277,18 @@ window.PREVIEW_DATA = {
   STORAGE_KEYS
 };
 
-// ══════ CROWN MEDIA STORAGE (IndexedDB for Large Video Blobs) ══════
-var CROWN_MEDIA_DB = 'crown_media_db';
-var CROWN_MEDIA_STORE = 'media_store';
+// ══════ FASHION BY HANIN MEDIA STORAGE (IndexedDB for Large Video Blobs) ══════
+var HANIN_MEDIA_DB = 'fashion_hanin_media_db';
+var HANIN_MEDIA_STORE = 'media_store';
 
-function openCrownMediaDB() {
+function openHaninMediaDB() {
   return new Promise((resolve, reject) => {
     try {
-      const req = indexedDB.open(CROWN_MEDIA_DB, 1);
+      const req = indexedDB.open(HANIN_MEDIA_DB, 1);
       req.onupgradeneeded = (e) => {
         const db = e.target.result;
-        if (!db.objectStoreNames.contains(CROWN_MEDIA_STORE)) {
-          db.createObjectStore(CROWN_MEDIA_STORE);
+        if (!db.objectStoreNames.contains(HANIN_MEDIA_STORE)) {
+          db.createObjectStore(HANIN_MEDIA_STORE);
         }
       };
       req.onsuccess = () => resolve(req.result);
@@ -308,10 +300,10 @@ function openCrownMediaDB() {
 }
 
 async function saveStoredVideoBlob(key, blob) {
-  const db = await openCrownMediaDB();
+  const db = await openHaninMediaDB();
   return new Promise((resolve, reject) => {
-    const tx = db.transaction(CROWN_MEDIA_STORE, 'readwrite');
-    tx.objectStore(CROWN_MEDIA_STORE).put(blob, key);
+    const tx = db.transaction(HANIN_MEDIA_STORE, 'readwrite');
+    tx.objectStore(HANIN_MEDIA_STORE).put(blob, key);
     tx.oncomplete = () => resolve();
     tx.onerror = () => reject(tx.error);
   });
@@ -319,10 +311,10 @@ async function saveStoredVideoBlob(key, blob) {
 
 async function getStoredVideoBlob(key) {
   try {
-    const db = await openCrownMediaDB();
+    const db = await openHaninMediaDB();
     return new Promise((resolve) => {
-      const tx = db.transaction(CROWN_MEDIA_STORE, 'readonly');
-      const req = tx.objectStore(CROWN_MEDIA_STORE).get(key);
+      const tx = db.transaction(HANIN_MEDIA_STORE, 'readonly');
+      const req = tx.objectStore(HANIN_MEDIA_STORE).get(key);
       req.onsuccess = () => resolve(req.result || null);
       req.onerror = () => resolve(null);
     });
@@ -333,10 +325,10 @@ async function getStoredVideoBlob(key) {
 
 async function deleteStoredVideoBlob(key) {
   try {
-    const db = await openCrownMediaDB();
+    const db = await openHaninMediaDB();
     return new Promise((resolve) => {
-      const tx = db.transaction(CROWN_MEDIA_STORE, 'readwrite');
-      tx.objectStore(CROWN_MEDIA_STORE).delete(key);
+      const tx = db.transaction(HANIN_MEDIA_STORE, 'readwrite');
+      tx.objectStore(HANIN_MEDIA_STORE).delete(key);
       tx.oncomplete = () => resolve();
       tx.onerror = () => resolve();
     });
@@ -345,10 +337,14 @@ async function deleteStoredVideoBlob(key) {
   }
 }
 
-window.CROWN_MEDIA_DB = CROWN_MEDIA_DB;
-window.CROWN_MEDIA_STORE = CROWN_MEDIA_STORE;
-window.openCrownMediaDB = openCrownMediaDB;
+window.HANIN_MEDIA_DB = HANIN_MEDIA_DB;
+window.HANIN_MEDIA_STORE = HANIN_MEDIA_STORE;
+window.openHaninMediaDB = openHaninMediaDB;
 window.saveStoredVideoBlob = saveStoredVideoBlob;
 window.getStoredVideoBlob = getStoredVideoBlob;
 window.deleteStoredVideoBlob = deleteStoredVideoBlob;
+// Aliases for compatibility
+window.CROWN_MEDIA_DB = HANIN_MEDIA_DB;
+window.CROWN_MEDIA_STORE = HANIN_MEDIA_STORE;
+window.openCrownMediaDB = openHaninMediaDB;
 
