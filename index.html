@@ -32,7 +32,12 @@
       });
     }
   </script>
+  <!-- Firebase SDKs (v8 compat) -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
   <script src="preview-data.js?v=3.0"></script>
+  <script src="firebase-config.js?v=1.0"></script>
   <link rel="stylesheet" href="style.css?v=3.0" />
 
 
@@ -858,6 +863,16 @@
       chatMessages.push(clientMsg);
       saveLocalChatMessages(chatMessages);
       renderChatMessages();
+
+      // إرسال الرسالة إلى Firestore
+      if (window.FashionDB) {
+        window.FashionDB.sendChatMessage('chat_' + chatSessionId, clientMsg, {
+          name: (lastPlacedOrder && lastPlacedOrder.name) || 'عميل فاشن باي حنين',
+          phone: (lastPlacedOrder && lastPlacedOrder.phone) || '',
+          orderId: (lastPlacedOrder && lastPlacedOrder.id) || '',
+          orderTotal: (lastPlacedOrder && lastPlacedOrder.total) || 0
+        });
+      }
 
       // رد آلي محلي سريع للمعاينة
       setTimeout(() => {
@@ -1806,12 +1821,12 @@
           productName: p.name
         };
 
-        // حفظ محلي في المتصفح عبر PREVIEW_DATA
-        const savedOrder = window.PREVIEW_DATA ? window.PREVIEW_DATA.addStoredOrder(orderPayload) : { id: 'ord_' + Date.now(), ...orderPayload };
+        // حفظ الطلب في Firestore والمزامنة المحلية
+        const savedOrder = window.FashionDB ? await window.FashionDB.createOrder(orderPayload) : (window.PREVIEW_DATA ? window.PREVIEW_DATA.addStoredOrder(orderPayload) : { id: 'ord_' + Date.now(), ...orderPayload });
 
         lastPlacedOrder = savedOrder;
         showSuccessModal();
-        showToast("✓ تم تسجيل طلبك التجريبي بنجاح!");
+        showToast("✓ تم تأكيد واستلام طلبك بنجاح!");
       } catch (e) {
         console.error(e);
         showToast("❌ حدث خطأ، يرجى إعادة المحاولة");
@@ -1879,12 +1894,12 @@
           productName: cart.map(i => i.name).join(' + ')
         };
 
-        // حفظ محلي في المتصفح عبر PREVIEW_DATA
-        const savedOrder = window.PREVIEW_DATA ? window.PREVIEW_DATA.addStoredOrder(orderPayload) : { id: 'ord_' + Date.now(), ...orderPayload };
+        // حفظ الطلب في Firestore والمزامنة المحلية
+        const savedOrder = window.FashionDB ? await window.FashionDB.createOrder(orderPayload) : (window.PREVIEW_DATA ? window.PREVIEW_DATA.addStoredOrder(orderPayload) : { id: 'ord_' + Date.now(), ...orderPayload });
 
         lastPlacedOrder = savedOrder;
         showSuccessModal();
-        showToast("✓ تم تسجيل طلب السلة بنجاح في وضع المعاينة!");
+        showToast("✓ تم تأكيد واستلام طلب السلة بنجاح!");
       } catch (e) {
         console.error(e);
         showToast("❌ حدث خطأ، يرجى إعادة المحاولة");
@@ -2041,8 +2056,35 @@
       updateProductList(parsedProds);
     }
 
-    // تحميل المنتجات مباشرة عند تشغيل الصفحة
-    loadLocalPreviewProducts();
+    // تحميل المنتجات ومزامنتها لحظياً عبر Firestore / الكاش المحلي
+    if (window.FashionDB && typeof window.FashionDB.onProductsChange === 'function') {
+      window.FashionDB.onProductsChange(async (rawProds) => {
+        const parsedProds = (rawProds || []).map(p => parseProductItem(p.id, p));
+        await resolveAllProductVideos(parsedProds);
+        updateProductList(parsedProds);
+      });
+    } else {
+      loadLocalPreviewProducts();
+    }
+
+    // الاستماع المباشر لرسائل المحادثة عبر Firestore
+    if (window.FashionDB && typeof window.FashionDB.onCustomerChatChange === 'function') {
+      window.FashionDB.onCustomerChatChange('chat_' + chatSessionId, (msgs) => {
+        if (msgs && msgs.length > 0) {
+          const wasEmpty = (!chatMessages || chatMessages.length === 0);
+          const lastMsg = msgs[msgs.length - 1];
+          chatMessages = msgs;
+          renderChatMessages();
+          if (!wasEmpty && lastMsg && (lastMsg.sender === 'admin' || lastMsg.sender === 'agent')) {
+            playChatNotificationSound();
+            if (!isChatOpen) {
+              const badge = document.getElementById('chatFabBadge');
+              if (badge) badge.style.display = 'flex';
+            }
+          }
+        }
+      });
+    }
 
     // الاستماع لأي تحديث للمنتجات أو المحادثات يتم في تبويب آخر أو عند التركيز على النافذة
     window.addEventListener('storage', (e) => {

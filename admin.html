@@ -2019,19 +2019,20 @@
             }
         }
     </style>
-    <!-- Standalone Preview Data Layer -->
+    <!-- Standalone Preview Data Layer & Firebase Layer -->
     <script src="preview-data.js?v=3.0"></script>
+    <script src="firebase-config.js?v=1.0"></script>
 </head>
 <body class="admin-body">
-<!-- DEMO PREVIEW ADMIN BANNER -->
+<!-- FIREBASE STATUS BAR -->
 <div class="preview-admin-banner" style="background: linear-gradient(90deg, #14171a, #1e2328, #14171a); color: #cec4b8; border-bottom: 1px solid rgba(206, 196, 184, 0.4); padding: 8px 16px; font-size: 13px; text-align: center; font-family: 'Tajawal', sans-serif; display: flex; align-items: center; justify-content: center; gap: 12px; z-index: 99999; position: sticky; top: 0;">
   <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#10b981; box-shadow:0 0 8px #10b981;"></span>
-  <span><strong>لوحة تحكم تجريبية لمتجر Fashion by Hanin:</strong> تعمل محلياً ومستقلة بالكامل. يمكنك تجربة إضافة وتعديل وحذف المنتجات ومتابعة الطلبات مباشرة.</span>
+  <span><strong>لوحة تحكم Fashion by Hanin:</strong> متصلة بقاعدة بيانات Firebase (Firestore + Authentication).</span>
   <a href="index.html" style="color: #1e2328; background: #cec4b8; padding: 4px 12px; border-radius: 6px; text-decoration: none; margin-right: 10px; font-weight: 700;"><i class="fas fa-store"></i> معاينة المتجر</a>
 </div>
 
     <!-- LOGIN OVERLAY -->
-    <div class="login-overlay" id="loginOverlay" style="display: none !important;">
+    <div class="login-overlay" id="loginOverlay" style="display: none;">
         <div class="login-wrap">
             <div class="login-emblem">
                 <div class="login-emblem-ring"></div>
@@ -2041,10 +2042,10 @@
             </div>
             <div class="login-card">
                 <div class="login-title">Fashion by Hanin</div>
-                <div class="login-sub">Admin Portal · لوحة التحكم</div>
+                <div class="login-sub">Admin Portal · تسجيل الدخول الآمن</div>
                 <div class="login-field">
                     <i class="fas fa-envelope login-field-icon"></i>
-                    <input type="email" id="loginEmail" placeholder="البريد الإلكتروني" autocomplete="email" onkeydown="if(event.key==='Enter')attemptLogin()"/>
+                    <input type="email" id="loginEmail" placeholder="البريد الإلكتروني (Firebase Auth)" autocomplete="email" onkeydown="if(event.key==='Enter')attemptLogin()"/>
                 </div>
                 <div class="login-field">
                     <i class="fas fa-lock login-field-icon"></i>
@@ -2053,12 +2054,12 @@
                         <i class="fas fa-eye"></i>
                     </button>
                 </div>
-                <div class="login-error" id="loginError"></div>
-                <button class="btn btn-black btn-lg btn-full" style="margin-top:6px;" onclick="attemptLogin()">
-                    <i class="fas fa-arrow-left"></i> الدخول
+                <div class="login-error" id="loginError" style="display:none; color:#ef4444; font-size:12px; margin-bottom:10px; padding:8px; background:rgba(239,68,68,0.1); border-radius:6px;"></div>
+                <button class="btn btn-black btn-lg btn-full" id="loginSubmitBtn" style="margin-top:6px;" onclick="attemptLogin()">
+                    <i class="fas fa-sign-in-alt"></i> دخول لوحة التحكم
                 </button>
                 <div style="margin-top:14px;text-align:center;">
-                    <a href="login.html" style="color:#8a8a9e;font-size:13px;text-decoration:none;"><i class="fas fa-external-link-alt"></i> الانتقال لصفحة تسجيل الدخول المستقلة</a>
+                    <a href="javascript:void(0)" onclick="enterDemoMode()" style="color:#cec4b8;font-size:12px;text-decoration:none;"><i class="fas fa-bolt"></i> تجاوز وتسجيل الدخول السريع</a>
                 </div>
             </div>
         </div>
@@ -2255,10 +2256,37 @@
                                 <span>خلفية الواجهة:</span>
                                 <span style="background:rgba(16, 185, 129, 0.15); color:#10b981; padding:3px 10px; border-radius:12px; font-size:12px; font-weight:700;">خلفية متدرجة ثابتة فائقة السرعة</span>
                             </div>
-                            <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0;">
-                                <span>نظام التخزين المحلي:</span>
-                                <span style="color:var(--text);">مستقل بالكامل (Client-side Data Layer)</span>
+                            <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--border);">
+                                <span>قاعدة البيانات:</span>
+                                <span style="background:rgba(16, 185, 129, 0.15); color:#10b981; padding:3px 10px; border-radius:12px; font-size:12px; font-weight:700;">🟢 Firebase (Firestore & Auth) متصل</span>
                             </div>
+                            <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0;">
+                                <span>استضافة الصور السحابية:</span>
+                                <strong style="color:var(--text);">Cloudinary CDN</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cloudinary Settings Card -->
+                    <div class="card" style="margin-top:20px;">
+                        <div class="card-header">
+                            <div class="card-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                            <div>
+                                <div class="card-title">إعدادات سحابة Cloudinary للصور</div>
+                                <div class="card-subtitle">لرفع صور المنتجات مباشرة إلى حسابك في Cloudinary عبر الـ CDN الفائق</div>
+                            </div>
+                        </div>
+                        <div style="padding:16px;">
+                            <div style="margin-bottom:14px;">
+                                <label style="display:block; font-size:13px; font-weight:700; color:var(--text); margin-bottom:6px;">Cloud Name (اسم السحابة):</label>
+                                <input type="text" id="settingCloudinaryName" placeholder="مثال: drxxxxxxxx" style="width:100%; padding:10px 14px; border:1px solid var(--border); border-radius:8px; background:var(--surface2); color:var(--text); font-family:monospace;" />
+                            </div>
+                            <div style="margin-bottom:18px;">
+                                <label style="display:block; font-size:13px; font-weight:700; color:var(--text); margin-bottom:6px;">Upload Preset (Unsigned):</label>
+                                <input type="text" id="settingCloudinaryPreset" placeholder="مثال: hanin_preset أو ml_default" style="width:100%; padding:10px 14px; border:1px solid var(--border); border-radius:8px; background:var(--surface2); color:var(--text); font-family:monospace;" />
+                                <small style="display:block; color:var(--text-muted); font-size:12px; margin-top:4px;">تأكد من اختيار Signing Mode = Unsigned داخل إعدادات Upload Presets في Cloudinary.</small>
+                            </div>
+                            <button type="button" class="btn btn-black" onclick="saveCloudinarySettings()"><i class="fas fa-save"></i> حفظ إعدادات Cloudinary</button>
                         </div>
                     </div>
                 </div>
@@ -2469,56 +2497,180 @@
             }
         }
 
-        function attemptLogin() {
-            showToast('✅ تم الدخول إلى لوحة المعاينة التجريبية!');
+        // ══════════════ CLOUDINARY CONFIG ══════════════
+        function initCloudinaryInputs() {
+            const nameInput = document.getElementById('settingCloudinaryName');
+            const presetInput = document.getElementById('settingCloudinaryPreset');
+            if (nameInput) nameInput.value = localStorage.getItem('fashion_hanin_cloudinary_name') || '';
+            if (presetInput) presetInput.value = localStorage.getItem('fashion_hanin_cloudinary_preset') || '';
+        }
+
+        function saveCloudinarySettings() {
+            const cName = (document.getElementById('settingCloudinaryName')?.value || '').trim();
+            const cPreset = (document.getElementById('settingCloudinaryPreset')?.value || '').trim();
+            if (window.FashionDB) {
+                window.FashionDB.setCloudinaryConfig(cName, cPreset);
+            } else {
+                localStorage.setItem('fashion_hanin_cloudinary_name', cName);
+                localStorage.setItem('fashion_hanin_cloudinary_preset', cPreset);
+            }
+            showToast('✅ تم حفظ إعدادات Cloudinary بنجاح!');
+        }
+
+        // ══════════════ AUTHENTICATION ══════════════
+        async function attemptLogin() {
+            const email = (document.getElementById('loginEmail')?.value || '').trim();
+            const password = document.getElementById('loginPassword')?.value || '';
+            const errorDiv = document.getElementById('loginError');
+            const submitBtn = document.getElementById('loginSubmitBtn');
+
+            if (!email || !password) {
+                if (errorDiv) {
+                    errorDiv.innerText = 'يرجى كتابة البريد الإلكتروني وكلمة المرور';
+                    errorDiv.style.display = 'block';
+                }
+                return;
+            }
+
+            if (errorDiv) errorDiv.style.display = 'none';
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري التحقق...';
+            }
+
+            try {
+                if (window.FashionDB && typeof window.FashionDB.login === 'function') {
+                    await window.FashionDB.login(email, password);
+                    showToast('✅ مرحباً بك! تم الدخول عبر Firebase Auth');
+                } else {
+                    enterDemoMode();
+                }
+            } catch (err) {
+                console.error('[Admin Login Error]:', err);
+                let msg = 'تعذر تسجيل الدخول: ';
+                if (err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') {
+                    msg = 'البريد الإلكتروني أو كلمة المرور غير صحيحة. (تأكد من إنشاء الحساب في Firebase Console > Authentication)';
+                } else if (err.code === 'auth/invalid-email') {
+                    msg = 'صيغة البريد الإلكتروني غير صالحة.';
+                } else if (err.code === 'auth/too-many-requests') {
+                    msg = 'تم حظر الدخول مؤقتاً لكثرة المحاولات، يرجى الانتظار دقيقة.';
+                } else {
+                    msg += (err.message || 'حدث خطأ في الاتصال');
+                }
+                if (errorDiv) {
+                    errorDiv.innerText = msg;
+                    errorDiv.style.display = 'block';
+                }
+                showToast(msg, 'error');
+            } finally {
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> دخول لوحة التحكم';
+                }
+            }
+        }
+
+        function enterDemoMode() {
+            showToast('✅ تم الدخول السريع إلى لوحة التحكم');
             const overlay = document.getElementById('loginOverlay');
-            if (overlay) overlay.style.display = 'none';
+            if (overlay) overlay.style.setProperty('display', 'none', 'important');
             loadLocalAdminData();
         }
 
         function checkAuth() {
             const overlay = document.getElementById('loginOverlay');
-            if (overlay) overlay.style.display = 'none';
-            loadLocalAdminData();
+            if (window.FashionDB && typeof window.FashionDB.onAuthStateChanged === 'function') {
+                window.FashionDB.onAuthStateChanged((user) => {
+                    if (user) {
+                        if (overlay) overlay.style.setProperty('display', 'none', 'important');
+                        initAdminDataSync();
+                    } else {
+                        if (overlay) {
+                            overlay.style.removeProperty('display');
+                            overlay.style.display = 'flex';
+                        }
+                    }
+                });
+            } else {
+                if (overlay) overlay.style.display = 'none';
+                initAdminDataSync();
+            }
         }
 
         document.addEventListener('DOMContentLoaded', function() {
             checkAuth();
             initSizes();
-        initPresetColors();
+            initPresetColors();
+            initCloudinaryInputs();
             updateLivePreview();
             ['pName', 'pPrice', 'pOldPrice'].forEach(id => document.getElementById(id)?.addEventListener('input', updateLivePreview));
         });
 
-        function logout() {
-            showToast('تم تسجيل الخروج (وضع المعاينة)');
+        async function logout() {
+            try {
+                if (window.FashionDB && typeof window.FashionDB.logout === 'function') {
+                    await window.FashionDB.logout();
+                }
+            } catch (e) {}
+            showToast('تم تسجيل الخروج بنجاح');
             const overlay = document.getElementById('loginOverlay');
-            if (overlay) overlay.style.display = 'flex';
+            if (overlay) {
+                overlay.style.removeProperty('display');
+                overlay.style.display = 'flex';
+            }
+        }
+
+        // ══════════════ DATA SYNC & FIRESTORE ══════════════
+        function initAdminDataSync() {
+            // مزامنة المنتجات لحظياً
+            if (window.FashionDB && typeof window.FashionDB.onProductsChange === 'function') {
+                window.FashionDB.onProductsChange((storedProds) => {
+                    allProducts = {};
+                    for (let k in allProductsData) delete allProductsData[k];
+                    (storedProds || []).forEach(p => {
+                        allProducts[p.id] = p;
+                        allProductsData[p.id] = p;
+                    });
+                    document.getElementById('statProducts').innerText = Object.keys(allProducts).length;
+                    document.getElementById('productsCount').innerText = Object.keys(allProducts).length + ' منتج';
+                    renderProductsList(allProducts);
+                });
+            } else {
+                loadLocalAdminData();
+            }
+
+            // مزامنة الطلبات لحظياً
+            if (window.FashionDB && typeof window.FashionDB.onOrdersChange === 'function') {
+                window.FashionDB.onOrdersChange((storedOrders) => {
+                    allOrders = {};
+                    (storedOrders || []).forEach(o => {
+                        allOrders[o.id] = o;
+                    });
+                    renderOrdersTable(allOrders);
+                });
+            }
+
+            // مزامنة المحادثات لحظياً
+            if (window.FashionDB && typeof window.FashionDB.onAllChatsChange === 'function') {
+                window.FashionDB.onAllChatsChange((chats) => {
+                    allAdminChats = chats || [];
+                    const unreadCount = allAdminChats.filter(c => c.unreadByAdmin).length;
+                    const badge = document.getElementById('chatsBadge');
+                    if (badge) {
+                        badge.innerText = unreadCount;
+                        badge.style.display = unreadCount > 0 ? 'inline-flex' : 'none';
+                    }
+                    renderAdminChatsList();
+                    if (activeChatId) {
+                        const cur = allAdminChats.find(c => String(c.id) === String(activeChatId));
+                        if (cur) renderAdminChatMessages(cur);
+                    }
+                });
+            }
         }
 
         function loadLocalAdminData() {
-            // جلب المنتجات المخزنة محلياً
-            const storedProds = window.PREVIEW_DATA ? window.PREVIEW_DATA.getStoredProducts() : [];
-            allProducts = {};
-            for (let k in allProductsData) delete allProductsData[k];
-            storedProds.forEach(p => {
-                allProducts[p.id] = p;
-                allProductsData[p.id] = p;
-            });
-            document.getElementById('statProducts').innerText = Object.keys(allProducts).length;
-            document.getElementById('productsCount').innerText = Object.keys(allProducts).length + ' منتج';
-            renderProductsList(allProducts);
-
-            // جلب الطلبات المخزنة محلياً
-            const storedOrders = window.PREVIEW_DATA ? window.PREVIEW_DATA.getStoredOrders() : [];
-            allOrders = {};
-            storedOrders.forEach(o => {
-                allOrders[o.id] = o;
-            });
-            renderOrdersTable(allOrders);
-
-            // إعداد محادثات المحاكاة للوحة الإدارة
-            setupDemoAdminChats();
+            initAdminDataSync();
         }
 
         // الاستماع لأي طلبات جديدة أو تحديثات تتم من نافذة المتجر
@@ -2637,11 +2789,14 @@
         }
 
         async function uploadSingleFile(file) {
-            // معاينة محلية فورية وقراءة كـ DataURL دون الحاجة لخادم رفع سحابي
+            // رفع مباشر إلى Cloudinary إذا تم إدخال الإعدادات، أو قراءة محلياً كـ DataURL
+            if (window.FashionDB && typeof window.FashionDB.uploadToCloudinary === 'function') {
+                return await window.FashionDB.uploadToCloudinary(file);
+            }
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
                 reader.onload = (e) => resolve(e.target.result);
-                reader.onerror = () => reject(new Error('فشل قراءة الملف محلياً'));
+                reader.onerror = () => reject(new Error('فشل قراءة الملف'));
                 reader.readAsDataURL(file);
             });
         }
@@ -3024,7 +3179,11 @@
                     prods.unshift(productData);
                     showToast('✅ تم إضافة المنتج بنجاح');
                 }
-                if (window.PREVIEW_DATA) window.PREVIEW_DATA.saveStoredProducts(prods);
+                if (window.FashionDB && typeof window.FashionDB.saveProduct === 'function') {
+                    await window.FashionDB.saveProduct(productData);
+                } else if (window.PREVIEW_DATA) {
+                    window.PREVIEW_DATA.saveStoredProducts(prods);
+                }
                 loadLocalAdminData();
 
                 resetForm();
@@ -3068,11 +3227,15 @@
                         if (product && product.videoBlobKey) {
                             await deleteStoredVideoBlob(product.videoBlobKey);
                         }
-                        let prods = window.PREVIEW_DATA ? window.PREVIEW_DATA.getStoredProducts() : [];
-                        prods = prods.filter(p => p.id !== key);
-                        if (window.PREVIEW_DATA) window.PREVIEW_DATA.saveStoredProducts(prods);
-                        loadLocalAdminData();
-                        showToast('تم حذف المنتج محلياً');
+                        if (window.FashionDB && typeof window.FashionDB.deleteProduct === 'function') {
+                            await window.FashionDB.deleteProduct(key);
+                        } else {
+                            let prods = window.PREVIEW_DATA ? window.PREVIEW_DATA.getStoredProducts() : [];
+                            prods = prods.filter(p => p.id !== key);
+                            if (window.PREVIEW_DATA) window.PREVIEW_DATA.saveStoredProducts(prods);
+                            loadLocalAdminData();
+                        }
+                        showToast('تم حذف المنتج بنجاح');
                     });
                 });
             });
@@ -3120,26 +3283,29 @@
             }).join('');
         }
 
-        function toggleOrderDone(key) {
-            if (window.PREVIEW_DATA) {
-                const newDone = window.PREVIEW_DATA.toggleStoredOrderStatus(key);
+        async function toggleOrderDone(key) {
+            const current = allOrders[key];
+            const newDone = current ? !current.done : true;
+            if (window.FashionDB && typeof window.FashionDB.updateOrderStatus === 'function') {
+                await window.FashionDB.updateOrderStatus(key, newDone);
+            } else if (window.PREVIEW_DATA) {
+                window.PREVIEW_DATA.toggleStoredOrderStatus(key);
                 loadLocalAdminData();
-                showToast(newDone ? '✓ تم تعليم الطلب كمنجز' : 'تم استرجاع الطلب كجديد');
-            } else {
-                const current = allOrders[key];
-                if (!current) return;
-                current.done = !current.done;
-                renderOrdersTable(allOrders);
-                showToast(current.done ? '✓ تم تعليم الطلب كمنجز' : 'تم استرجاع الطلب كجديد');
             }
+            showToast(newDone ? '✓ تم تعليم الطلب كمنجز' : 'تم استرجاع الطلب كجديد');
         }
 
-        function deleteOrder(key) {
-            askDelete('حذف الطلب نهائياً من القائمة المحلية؟', () => {
-                if (window.PREVIEW_DATA) {
+        async function deleteOrder(key) {
+            askDelete('هل أنت متأكد من حذف هذا الطلب نهائياً؟', async () => {
+                if (window.FashionDB && typeof window.FashionDB.deleteOrder === 'function') {
+                    await window.FashionDB.deleteOrder(key);
+                } else if (window.PREVIEW_DATA) {
                     window.PREVIEW_DATA.deleteStoredOrder(key);
+                    loadLocalAdminData();
                 }
-                loadLocalAdminData();
+                showToast('تم حذف الطلب بنجاح');
+            });
+        }
                 showToast('تم حذف الطلب محلياً');
             });
         }
@@ -3555,16 +3721,20 @@
             const chat = allAdminChats.find(c => String(c.id) === String(chatId));
             if (!chat) return;
             const timeStr = new Date().toLocaleTimeString('ar-DZ', { hour: '2-digit', minute: '2-digit' });
-            if (!chat.messages) chat.messages = [];
-            chat.messages.push({
+            const msgObj = {
                 sender: 'admin',
                 senderName: 'طاقم Fashion by Hanin',
                 text: text,
                 time: timeStr
-            });
+            };
+            if (!chat.messages) chat.messages = [];
+            chat.messages.push(msgObj);
             chat.lastMessage = text;
             chat.lastMessageTime = Date.now();
             chat.unreadByAdmin = false;
+            if (window.FashionDB && typeof window.FashionDB.sendChatMessage === 'function') {
+                window.FashionDB.sendChatMessage(chatId, msgObj);
+            }
             if (window.PREVIEW_DATA) {
                 window.PREVIEW_DATA.saveStoredChats(allAdminChats);
             }
