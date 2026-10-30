@@ -2169,9 +2169,7 @@
                         <div class="form-col">
                             <div class="card"><div class="card-header"><div class="card-icon"><i class="fas fa-tag"></i></div><div><div class="card-title">معلومات المنتج</div></div></div>
                                 <div class="field"><label>اسم المنتج *</label><input class="f-input" id="pName" placeholder="مثال: قميص كاجوال" oninput="updateLivePreview()"></div>
-                                <div class="field"><label>التصنيف الفرعي</label><input class="f-input" id="pSubtitle" placeholder="Fashion by Hanin Luxury"></div>
-                                <div class="field-row"><div class="field"><label>السعر (دج) *</label><input class="f-input" id="pPrice" type="number" oninput="updateLivePreview()"></div><div class="field"><label>السعر الأصلي (دج)</label><input class="f-input" id="pOldPrice" type="number" oninput="updateLivePreview()"></div></div>
-                                <div class="field-row" style="margin-top:10px;"><div class="field"><label>سعر القطعة الواحدة عند شراء قطعتين (دج)</label><input class="f-input" id="pPrice2" type="number" placeholder="مثال: 250 (سعر القطعة)"></div><div class="field"><label>سعر القطعة عند شراء 3 قطع أو أكثر (دج)</label><input class="f-input" id="pPrice3" type="number" placeholder="مثال: 200 (سعر القطعة)"></div></div>
+                                <div class="field"><label>السعر (دج) *</label><input class="f-input" id="pPrice" type="number" oninput="updateLivePreview()"></div>
                                 <div class="field"><label>الوصف</label><textarea class="f-textarea" id="pDesc" rows="3"></textarea></div>
                             </div>
                             <div class="card"><div class="card-header"><div class="card-icon"><i class="fas fa-warehouse"></i></div><div><div class="card-title">المخزون</div></div></div>
@@ -2205,42 +2203,10 @@
                                 <div class="upload-zone" id="uploadZone" onclick="document.getElementById('multiFileInput').click()"><i class="upload-icon fas fa-cloud-upload-alt"></i><p>اضغط لرفع الصور</p><small>حتى 10 صور</small></div>
                                 <input type="file" id="multiFileInput" multiple accept="image/*" style="display:none" onchange="handleMultipleFiles(this.files)">
                                 <div class="thumbnails-grid" id="thumbnailsContainer"></div>
-                                <textarea class="f-textarea" id="extraImageUrls" rows="2" placeholder="روابط إضافية" style="margin-top:8px;"></textarea>
-                            </div>
-                            <div class="card"><div class="card-header"><div class="card-icon"><i class="fas fa-video"></i></div><div><div class="card-title">فيديو المنتج</div><div class="card-subtitle">اختياري – يظهر في بطاقة المنتج</div></div></div>
-                                <div id="productVideoPreviewWrap" style="display:none;margin-bottom:10px;">
-                                    <div style="position:relative;border-radius:10px;overflow:hidden;background:#111;border:1px solid #2a2a2f;">
-                                        <video id="productVideoPreview" style="width:100%;max-height:160px;object-fit:cover;display:block;" autoplay muted loop playsinline></video>
-                                        <button class="btn btn-red btn-icon-sm" onclick="removeProductVideo()" style="position:absolute;top:6px;left:6px;" title="حذف الفيديو">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="upload-zone" id="productVideoUploadZone" onclick="document.getElementById('productVideoFileInput').click()" style="padding:16px;">
-                                    <i class="upload-icon fas fa-film" style="font-size:20px;"></i>
-                                    <p style="font-size:12px;">اضغط لرفع فيديو</p>
-                                    <small>MP4, WebM — الحد الأقصى 100MB</small>
-                                </div>
-                                <input type="file" id="productVideoFileInput" accept="video/mp4,video/webm" style="display:none" onchange="handleProductVideoUpload(this.files)">
-                                <div id="productVideoProgress" style="display:none;margin-top:8px;">
-                                    <div style="display:flex;align-items:center;gap:8px;">
-                                        <div style="flex:1;background:var(--surface3);border:1px solid var(--border);border-radius:20px;height:7px;overflow:hidden;">
-                                            <div id="productVideoProgressBar" style="height:100%;background:var(--accent);border-radius:20px;width:0%;transition:width 0.3s;"></div>
-                                        </div>
-                                        <span id="productVideoProgressText" style="font-size:10px;color:var(--text-secondary);min-width:30px;">0%</span>
-                                    </div>
-                                </div>
-                                <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);">
-                                    <div style="font-size:10px;font-weight:700;color:var(--text-secondary);margin-bottom:6px;">أو إدخال مسار أو رابط فيديو مباشر:</div>
-                                    <div style="display:flex;gap:6px;">
-                                        <input type="text" id="productVideoUrlInput" placeholder="مثال: hero.mp4 أو رابط فيديو https://..." style="flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-xs);padding:7px 10px;color:var(--text);font-size:11px;" onchange="handleProductVideoUrlDirect(this.value)">
-                                        <button type="button" class="btn btn-black btn-sm" onclick="handleProductVideoUrlDirect(document.getElementById('productVideoUrlInput').value)"><i class="fas fa-check"></i> تطبيق</button>
-                                    </div>
-                                </div>
                             </div>
                             <div class="card"><div class="card-header"><div class="card-icon"><i class="fas fa-eye"></i></div><div class="card-title">معاينة</div></div>
                                 <div class="preview-wrap"><div class="preview-img-area" id="previewImgArea"><i class="fas fa-image" style="color:var(--text-muted);font-size:28px;"></i><img id="previewImg" src="" style="display:none;"></div>
-                                    <div style="padding:10px;"><div id="previewName" style="color:var(--text);font-weight:700;font-size:13px;margin-bottom:4px;">اسم المنتج</div><div style="display:flex;gap:6px;align-items:baseline;"><span id="previewOldPrice" style="text-decoration:line-through;color:var(--text-muted);font-size:11px;"></span><span id="previewPrice" style="font-weight:700;color:var(--text);font-size:14px;">0 دج</span></div></div></div>
+                                    <div style="padding:10px;"><div id="previewName" style="color:var(--text);font-weight:700;font-size:13px;margin-bottom:4px;">اسم المنتج</div><div style="display:flex;gap:6px;align-items:baseline;"><span id="previewOldPrice" style="text-decoration:line-through;color:var(--text-muted);font-size:11px;display:none;"></span><span id="previewPrice" style="font-weight:700;color:var(--text);font-size:14px;">0 دج</span></div></div></div>
                             </div>
                             <div class="form-actions"><button class="btn btn-outline" onclick="resetForm()"><i class="fas fa-undo"></i> تفريغ</button><button class="btn btn-black btn-lg" onclick="submitProduct()" id="submitFormBtn"><i class="fas fa-cloud-upload-alt"></i> نشر</button></div>
                         </div>
@@ -2857,7 +2823,8 @@
         }
 
         function getAllImageList() {
-            const extra = document.getElementById('extraImageUrls').value.split('\n').map(u => u.trim()).filter(Boolean);
+            const extraEl = document.getElementById('extraImageUrls');
+            const extra = extraEl ? extraEl.value.split('\n').map(u => u.trim()).filter(Boolean) : [];
             const all = [...uploadedImages, ...extra];
             return Array.from(new Set(all));
         }
@@ -3021,11 +2988,11 @@
             document.getElementById('formTitle').innerHTML = 'تعديل منتج';
             document.getElementById('submitFormBtn').innerHTML = '<i class="fas fa-save"></i> تحديث';
             document.getElementById('pName').value = product.name || '';
-            document.getElementById('pSubtitle').value = product.subtitle || '';
+            if (document.getElementById('pSubtitle')) document.getElementById('pSubtitle').value = product.subtitle || '';
             document.getElementById('pPrice').value = product.price || '';
-            document.getElementById('pOldPrice').value = product.oldPrice || '';
-            document.getElementById('pPrice2').value = product.price2 || '';
-            document.getElementById('pPrice3').value = product.price3 || '';
+            if (document.getElementById('pOldPrice')) document.getElementById('pOldPrice').value = product.oldPrice || '';
+            if (document.getElementById('pPrice2')) document.getElementById('pPrice2').value = product.price2 || '';
+            if (document.getElementById('pPrice3')) document.getElementById('pPrice3').value = product.price3 || '';
             document.getElementById('pDesc').value = product.description || '';
             document.getElementById('realQuantity').value = product.realQuantity || 0;
             document.getElementById('displayQuantity').value = product.displayQuantity || 0;
@@ -3042,29 +3009,8 @@
             existingImagesBackup = Array.from(new Set(rawImgs));
             uploadedImages = [];
             document.getElementById('thumbnailsContainer').innerHTML = '';
-            document.getElementById('extraImageUrls').value = existingImagesBackup.join('\n');
+            if (document.getElementById('extraImageUrls')) document.getElementById('extraImageUrls').value = existingImagesBackup.join('\n');
             updateMainPreview(existingImagesBackup[0] || '');
-            // Load product video
-            productVideoPendingFile = null;
-            if (product.videoBlobKey) {
-                getStoredVideoBlob(product.videoBlobKey).then(blob => {
-                    if (blob) {
-                        productVideoUrl = URL.createObjectURL(blob);
-                        updateProductVideoPreview(productVideoUrl);
-                    }
-                });
-            } else if (product.videoUrl && product.videoUrl.startsWith('indexeddb:')) {
-                const k = product.videoUrl.replace('indexeddb:', '');
-                getStoredVideoBlob(k).then(blob => {
-                    if (blob) {
-                        productVideoUrl = URL.createObjectURL(blob);
-                        updateProductVideoPreview(productVideoUrl);
-                    }
-                });
-            } else {
-                productVideoUrl = product.videoUrl || '';
-                updateProductVideoPreview(productVideoUrl);
-            }
             updateLivePreview();
             showSection('add-product');
         }
@@ -3073,20 +3019,25 @@
             editingProductKey = null;
             document.getElementById('formTitle').innerHTML = 'إضافة منتج جديد';
             document.getElementById('submitFormBtn').innerHTML = '<i class="fas fa-cloud-upload-alt"></i> نشر';
-            ['pName', 'pSubtitle', 'pPrice', 'pOldPrice', 'pDesc', 'pPrice2', 'pPrice3'].forEach(id => document.getElementById(id).value =
-                '');
-            ['realQuantity', 'displayQuantity'].forEach(id => document.getElementById(id).value = '0');
-            document.getElementById('showQuantityToggle').checked = true;
+            ['pName', 'pPrice', 'pDesc'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.value = '';
+            });
+            ['realQuantity', 'displayQuantity'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.value = '0';
+            });
+            if (document.getElementById('showQuantityToggle')) document.getElementById('showQuantityToggle').checked = true;
             selectedColors = [];
             selectedSizes = [];
             uploadedImages = [];
             existingImagesBackup = [];
-            document.getElementById('extraImageUrls').value = '';
+            if (document.getElementById('extraImageUrls')) document.getElementById('extraImageUrls').value = '';
             document.getElementById('colorsGrid').innerHTML = '';
             document.getElementById('thumbnailsContainer').innerHTML = '';
             productVideoUrl = '';
             productVideoPendingFile = null;
-            updateProductVideoPreview('');
+            if (typeof updateProductVideoPreview === 'function') updateProductVideoPreview('');
             initSizes();
             initPresetColors();
             renderColors();
@@ -3098,7 +3049,6 @@
         function updateLivePreview() {
             const name = document.getElementById('pName')?.value.trim();
             const price = parseFloat(document.getElementById('pPrice')?.value) || 0;
-            const oldPrice = parseFloat(document.getElementById('pOldPrice')?.value) || 0;
 
             const nameEl = document.getElementById('previewName');
             const priceEl = document.getElementById('previewPrice');
@@ -3107,13 +3057,8 @@
             if (nameEl) nameEl.textContent = name || 'اسم المنتج';
             if (priceEl) priceEl.textContent = price ? price.toLocaleString() + ' دج' : '0 دج';
             if (oldPriceEl) {
-                if (oldPrice > price) {
-                    oldPriceEl.textContent = oldPrice.toLocaleString() + ' دج';
-                    oldPriceEl.style.display = 'inline';
-                } else {
-                    oldPriceEl.textContent = '';
-                    oldPriceEl.style.display = 'none';
-                }
+                oldPriceEl.textContent = '';
+                oldPriceEl.style.display = 'none';
             }
         }
 
@@ -3142,29 +3087,14 @@
                 });
 
                 const targetKey = editingProductKey || ('prod_' + Date.now().toString(36));
-                let videoBlobKey = (editingProductKey && allProductsData[editingProductKey]?.videoBlobKey) || '';
-                let finalVideoUrl = productVideoUrl || '';
-
-                if (productVideoPendingFile) {
-                    videoBlobKey = 'pvid_' + targetKey;
-                    await saveStoredVideoBlob(videoBlobKey, productVideoPendingFile);
-                    finalVideoUrl = 'indexeddb:' + videoBlobKey;
-                } else if (videoBlobKey && productVideoUrl && (productVideoUrl.startsWith('indexeddb:') || productVideoUrl.startsWith('blob:'))) {
-                    // الاحتفاظ بالفيديو المخزن في IndexedDB وتجنب حفظ رابط blob مؤقت
-                    finalVideoUrl = 'indexeddb:' + videoBlobKey;
-                } else if (!productVideoUrl && videoBlobKey) {
-                    await deleteStoredVideoBlob(videoBlobKey);
-                    videoBlobKey = '';
-                    finalVideoUrl = '';
-                }
 
                 const productData = {
                     name,
-                    subtitle: document.getElementById('pSubtitle').value.trim() || 'Fashion by Hanin Luxury',
+                    subtitle: document.getElementById('pSubtitle')?.value.trim() || 'Fashion by Hanin Luxury',
                     price,
-                    oldPrice: parseFloat(document.getElementById('pOldPrice').value) || 0,
-                    price2: parseFloat(document.getElementById('pPrice2').value) || 0,
-                    price3: parseFloat(document.getElementById('pPrice3').value) || 0,
+                    oldPrice: parseFloat(document.getElementById('pOldPrice')?.value) || 0,
+                    price2: parseFloat(document.getElementById('pPrice2')?.value) || 0,
+                    price3: parseFloat(document.getElementById('pPrice3')?.value) || 0,
                     description: document.getElementById('pDesc').value.trim(),
                     realQuantity: parseInt(document.getElementById('realQuantity').value) || 0,
                     displayQuantity: parseInt(document.getElementById('displayQuantity').value) || 0,
@@ -3173,8 +3103,8 @@
                     sizes: selectedSizes || [],
                     images: allImgs.length ? allImgs : (mainImage ? [mainImage] : []),
                     image: mainImage,
-                    videoUrl: finalVideoUrl,
-                    videoBlobKey: videoBlobKey,
+                    videoUrl: '',
+                    videoBlobKey: '',
                     updatedAt: Date.now()
                 };
 
