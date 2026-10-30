@@ -2024,12 +2024,6 @@
     <script src="firebase-config.js?v=1.0"></script>
 </head>
 <body class="admin-body">
-<!-- FIREBASE STATUS BAR -->
-<div class="preview-admin-banner" style="background: linear-gradient(90deg, #14171a, #1e2328, #14171a); color: #cec4b8; border-bottom: 1px solid rgba(206, 196, 184, 0.4); padding: 8px 16px; font-size: 13px; text-align: center; font-family: 'Tajawal', sans-serif; display: flex; align-items: center; justify-content: center; gap: 12px; z-index: 99999; position: sticky; top: 0;">
-  <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#10b981; box-shadow:0 0 8px #10b981;"></span>
-  <span><strong>لوحة تحكم Fashion by Hanin:</strong> متصلة بقاعدة بيانات Firebase (Firestore + Authentication).</span>
-  <a href="index.html" style="color: #1e2328; background: #cec4b8; padding: 4px 12px; border-radius: 6px; text-decoration: none; margin-right: 10px; font-weight: 700;"><i class="fas fa-store"></i> معاينة المتجر</a>
-</div>
 
     <!-- LOGIN OVERLAY -->
     <div class="login-overlay" id="loginOverlay" style="display: none;">
@@ -2111,9 +2105,7 @@
                     </div>
                     <div class="stats-grid">
                         <div class="stat-card"><div class="stat-icon"><i class="fas fa-tshirt"></i></div><div class="stat-value" id="statProducts">0</div><div class="stat-label">إجمالي المنتجات</div></div>
-                        <div class="stat-card"><div class="stat-icon"><i class="fas fa-shopping-bag"></i></div><div class="stat-value" id="statOrders">0</div><div class="stat-label">إجمالي الطلبات</div></div>
                         <div class="stat-card"><div class="stat-icon"><i class="fas fa-bell"></i></div><div class="stat-value" id="statNewOrders">0</div><div class="stat-label">طلبات جديدة</div></div>
-                        <div class="stat-card"><div class="stat-icon"><i class="fas fa-check-circle"></i></div><div class="stat-value" id="statDoneOrders">0</div><div class="stat-label">طلبات منجزة</div></div>
                     </div>
                     <div class="dash-grid">
                         <div class="card">
@@ -2408,10 +2400,6 @@
                 <i class="fas fa-comments"></i>
                 <span>المحادثات</span>
                 <span class="nav-badge" id="chatsBadge" style="display:none;">0</span>
-            </div>
-            <div class="bottom-nav-item nav-link" data-section="settings">
-                <i class="fas fa-cog"></i>
-                <span>الإعدادات</span>
             </div>
         </nav>
 
@@ -3244,9 +3232,12 @@
         function renderOrdersTable(data) {
             const keys = Object.keys(data).reverse();
             const newCount = keys.filter(k => !data[k].done).length;
-            document.getElementById('statOrders').innerText = keys.length;
-            document.getElementById('statNewOrders').innerText = newCount;
-            document.getElementById('statDoneOrders').innerText = keys.length - newCount;
+            const statOrd = document.getElementById('statOrders');
+            if (statOrd) statOrd.innerText = keys.length;
+            const statNew = document.getElementById('statNewOrders');
+            if (statNew) statNew.innerText = newCount;
+            const statDone = document.getElementById('statDoneOrders');
+            if (statDone) statDone.innerText = keys.length - newCount;
             document.getElementById('ordersCount').innerText = keys.length + ' طلب';
             const badge = document.getElementById('ordersBadge');
             if (badge) { badge.innerText = newCount;
