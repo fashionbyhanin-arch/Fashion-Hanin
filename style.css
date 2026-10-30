@@ -159,11 +159,11 @@ img, video {
 }
 
 .nav-logo-name {
-  font-family: 'Firlest', 'Designer', 'Cinzel', serif;
+  font-family: 'Cinzel', 'Cormorant Garamond', serif;
   font-size: 22px;
-  font-weight: 400;
-  color: #ffffff;
-  letter-spacing: 3px;
+  font-weight: 600;
+  color: #cec4b8;
+  letter-spacing: 2px;
   line-height: 1;
   display: inline-block;
   text-shadow: 0 2px 10px rgba(0,0,0,0.5);
@@ -336,11 +336,11 @@ img, video {
 }
 
 .drawer-brand-name {
-  font-family: 'Firlest', 'Designer', 'Cinzel', serif;
+  font-family: 'Cinzel', 'Cormorant Garamond', serif;
   font-size: 19px;
-  font-weight: 400;
-  color: #ffffff;
-  letter-spacing: 3px;
+  font-weight: 600;
+  color: #cec4b8;
+  letter-spacing: 2px;
 }
 
 .drawer-close {
@@ -446,11 +446,11 @@ img, video {
 }
 
 .hero-brand-name {
-  font-family: 'Firlest', 'Designer', 'Cinzel', serif;
+  font-family: 'Cinzel', 'Cormorant Garamond', serif;
   font-size: clamp(36px, 7vw, 62px);
-  font-weight: 400;
+  font-weight: 600;
   color: #ffffff;
-  letter-spacing: 6px;
+  letter-spacing: 4px;
   line-height: 1.15;
   margin-bottom: 14px;
   text-transform: uppercase;
@@ -2125,11 +2125,11 @@ img, video {
 }
 
 .footer-brand .logo-text {
-  font-family: 'Firlest', 'Designer', 'Cinzel', serif;
+  font-family: 'Cinzel', 'Cormorant Garamond', serif;
   font-size: 24px;
-  font-weight: 400;
-  color: #ffffff;
-  letter-spacing: 3px;
+  font-weight: 600;
+  color: #cec4b8;
+  letter-spacing: 2px;
   margin-bottom: 10px;
 }
 
