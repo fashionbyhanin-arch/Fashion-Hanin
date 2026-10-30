@@ -78,55 +78,9 @@ const PREVIEW_PRODUCTS = [
   }
 ];
 
-const INITIAL_DEMO_ORDERS = [
-  {
-    id: "ord_hanin_101",
-    name: "حمزة بن عمار",
-    phone: "0550112233",
-    wilaya: "16 - الجزائر",
-    commune: "سيدي يحيى - حيدرة",
-    address: "شارع العربي بن مهيدي",
-    delivery: "home",
-    payment: "cash",
-    products: [
-      { name: "طقم كلاسيك فاخر أول بلاك", price: 5500, quantity: 1, size: "L", color: "أسود فاخر", colorHex: "#121217", image: "images/all_black_classic.jpg" }
-    ],
-    total: 5500,
-    productName: "طقم كلاسيك فاخر أول بلاك",
-    createdAt: Date.now() - (2 * 3600 * 1000),
-    done: false
-  }
-];
+const INITIAL_DEMO_ORDERS = [];
 
-const INITIAL_DEMO_CHATS = [
-  {
-    id: 'chat_hanin_1',
-    customerName: 'كريم بلحاج',
-    customerPhone: '0662112233',
-    orderId: 'ord_hanin_101',
-    orderTotal: 5500,
-    lastMessage: 'السلام عليكم، هل مقاس L متوفر في طقم أولد موني الكلاسيك؟',
-    lastMessageTime: Date.now() - 3600000,
-    unreadByAdmin: true,
-    messages: [
-      { sender: 'client', text: 'السلام عليكم، هل مقاس L متوفر في طقم أولد موني الكلاسيك؟', time: '14:20' },
-      { sender: 'agent', text: 'وعليكم السلام، نعم المقاس متوفر وجاهز للشحن الفوري لكافة الولايات!', time: '14:22' }
-    ]
-  },
-  {
-    id: 'chat_hanin_2',
-    customerName: 'سفيان مرابط',
-    customerPhone: '0555889900',
-    orderId: '',
-    orderTotal: 0,
-    lastMessage: 'شكراً لكم، تم استلام الطلبية وجودة القماش ممتازة جداً!',
-    lastMessageTime: Date.now() - 7200000,
-    unreadByAdmin: false,
-    messages: [
-      { sender: 'client', text: 'شكراً لكم، تم استلام الطلبية وجودة القماش ممتازة جداً!', time: '12:05' }
-    ]
-  }
-];
+const INITIAL_DEMO_CHATS = [];
 
 const STORAGE_KEYS = {
   PRODUCTS: 'fashion_hanin_store_products',
@@ -135,11 +89,15 @@ const STORAGE_KEYS = {
   SETTINGS: 'fashion_hanin_store_settings'
 };
 
-// تصفير وتهيئة التخزين المعزول لمتجر Fashion by Hanin
+// تصفير وتهيئة التخزين الحقيقي لمتجر Fashion by Hanin
 try {
-  if (!localStorage.getItem('fashion_hanin_clean_v1')) {
-    localStorage.setItem('fashion_hanin_clean_v1', '1');
-    localStorage.setItem(STORAGE_KEYS.PRODUCTS, JSON.stringify(PREVIEW_PRODUCTS));
+  if (!localStorage.getItem('fashion_hanin_prod_ready_v1')) {
+    localStorage.setItem('fashion_hanin_prod_ready_v1', '1');
+    localStorage.removeItem(STORAGE_KEYS.ORDERS);
+    localStorage.removeItem(STORAGE_KEYS.CHATS);
+    if (!localStorage.getItem(STORAGE_KEYS.PRODUCTS)) {
+      localStorage.setItem(STORAGE_KEYS.PRODUCTS, JSON.stringify(PREVIEW_PRODUCTS));
+    }
   }
 } catch(e) {}
 

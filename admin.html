@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
-    <title>Fashion by Hanin — لوحة التحكم التجريبية</title>
+    <title>Fashion by Hanin — لوحة التحكم</title>
     <link rel="manifest" href="manifest.json"/>
     <link rel="icon" type="image/jpeg" href="images/logo.jpg"/>
     <link rel="apple-touch-icon" href="images/logo.jpg"/>
@@ -2026,7 +2026,7 @@
 <body class="admin-body">
 
     <!-- LOGIN OVERLAY -->
-    <div class="login-overlay" id="loginOverlay" style="display: none;">
+    <div class="login-overlay" id="loginOverlay" style="display: flex;">
         <div class="login-wrap">
             <div class="login-emblem">
                 <div class="login-emblem-ring"></div>
@@ -2036,10 +2036,10 @@
             </div>
             <div class="login-card">
                 <div class="login-title">Fashion by Hanin</div>
-                <div class="login-sub">Admin Portal · تسجيل الدخول الآمن</div>
+                <div class="login-sub">بوابة إدارة المتجر · تسجيل الدخول الآمن</div>
                 <div class="login-field">
                     <i class="fas fa-envelope login-field-icon"></i>
-                    <input type="email" id="loginEmail" placeholder="البريد الإلكتروني (Firebase Auth)" autocomplete="email" onkeydown="if(event.key==='Enter')attemptLogin()"/>
+                    <input type="email" id="loginEmail" placeholder="البريد الإلكتروني" autocomplete="email" onkeydown="if(event.key==='Enter')attemptLogin()"/>
                 </div>
                 <div class="login-field">
                     <i class="fas fa-lock login-field-icon"></i>
@@ -2052,9 +2052,6 @@
                 <button class="btn btn-black btn-lg btn-full" id="loginSubmitBtn" style="margin-top:6px;" onclick="attemptLogin()">
                     <i class="fas fa-sign-in-alt"></i> دخول لوحة التحكم
                 </button>
-                <div style="margin-top:14px;text-align:center;">
-                    <a href="javascript:void(0)" onclick="enterDemoMode()" style="color:#cec4b8;font-size:12px;text-decoration:none;"><i class="fas fa-bolt"></i> تجاوز وتسجيل الدخول السريع</a>
-                </div>
             </div>
         </div>
     </div>
@@ -2067,7 +2064,7 @@
             <div class="header-left">
                 <img src="images/logo.jpg" alt="Fashion by Hanin" class="header-logo" style="width:36px;height:36px;border-radius:50%;object-fit:cover;" onerror="this.src='images/logo.jpg'">
                 <span class="header-brand" style="font-family:'Cinzel', serif; color:#cec4b8;">Fashion by Hanin</span>
-                <span class="header-title" id="topbarTitle">لوحة التحكم التجريبية</span>
+                <span class="header-title" id="topbarTitle">لوحة الإدارة</span>
             </div>
             <div class="header-right">
                 <button class="header-store-btn" id="pwaInstallBtn" title="تثبيت كتطبيق" onclick="installPWA()" style="display:none;color:#10b981;">
@@ -2529,9 +2526,9 @@
             try {
                 if (window.FashionDB && typeof window.FashionDB.login === 'function') {
                     await window.FashionDB.login(email, password);
-                    showToast('✅ مرحباً بك! تم الدخول عبر Firebase Auth');
+                    showToast('✅ مرحباً بك! تم تسجيل الدخول بنجاح');
                 } else {
-                    enterDemoMode();
+                    throw new Error('خدمة المصادقة غير مهيأة بعد');
                 }
             } catch (err) {
                 console.error('[Admin Login Error]:', err);
@@ -2558,13 +2555,6 @@
             }
         }
 
-        function enterDemoMode() {
-            showToast('✅ تم الدخول السريع إلى لوحة التحكم');
-            const overlay = document.getElementById('loginOverlay');
-            if (overlay) overlay.style.setProperty('display', 'none', 'important');
-            loadLocalAdminData();
-        }
-
         function checkAuth() {
             const overlay = document.getElementById('loginOverlay');
             if (window.FashionDB && typeof window.FashionDB.onAuthStateChanged === 'function') {
@@ -2580,8 +2570,7 @@
                     }
                 });
             } else {
-                if (overlay) overlay.style.display = 'none';
-                initAdminDataSync();
+                if (overlay) overlay.style.display = 'flex';
             }
         }
 
@@ -2773,7 +2762,7 @@
         }
 
         async function syncRTDBToFirestore() {
-            showToast('✅ [وضع المعاينة] جميع البيانات متزامنة ومحفوظة محلياً في متصفحك!');
+            showToast('✅ جميع البيانات متزامنة ومحفوظة في قاعدة بيانات المتجر السحابية!');
         }
 
         async function uploadSingleFile(file) {
@@ -3905,7 +3894,7 @@
         }
 
         async function testGSheetConnection() {
-            showToast('ℹ️ [وضع المعاينة] ميزة تصدير Google Sheets متاحة في النسخة الإنتاجية مع توفير رابط Web App خاص بك.');
+            showToast('ℹ️ لتفعيل مزامنة Google Sheets، يرجى توفير رابط Google Web App الخاص بك.');
         }
 
         // ══════ PWA SERVICE WORKER ══════
