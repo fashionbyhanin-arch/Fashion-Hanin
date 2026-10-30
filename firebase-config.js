@@ -21,8 +21,8 @@ const firebaseConfig = {
 
 // 2. إعدادات Cloudinary (يمكن تعديلها من لوحة التحكم أو حفظها في التخزين)
 const CLOUDINARY_DEFAULTS = {
-  cloudName: localStorage.getItem('fashion_hanin_cloudinary_name') || '',
-  uploadPreset: localStorage.getItem('fashion_hanin_cloudinary_preset') || ''
+  cloudName: localStorage.getItem('fashion_hanin_cloudinary_name') || 'vunqsror',
+  uploadPreset: localStorage.getItem('fashion_hanin_cloudinary_preset') || 'fashion_hanin'
 };
 
 // 3. تهيئة خدمات Firebase
@@ -375,3 +375,4 @@ const FashionDB = {
 };
 
 window.FashionDB = FashionDB;
+
