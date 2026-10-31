@@ -75,6 +75,26 @@ const PREVIEW_PRODUCTS = [
       { name: "أسود فاخر", hex: "#121217" }
     ],
     videoUrl: ""
+  },
+  {
+    id: "hanin_p5",
+    name: "فستان سهرة ماكسي حرير فاخر (Luxury Silk Evening Dress)",
+    subtitle: "Fashion by Hanin Couture",
+    price: 7800,
+    oldPrice: 9500,
+    price2: 7200,
+    price3: 6800,
+    description: "فستان سهرة ماكسي راقٍ وأنيق مصنوع من خامة الحرير الساتان الفاخر، بقصة انسيابية ساحرة وخصر محدد يبرز جمال الإطلالة. مثالي للمناسبات الخاصة، الأعراس والحفلات الراقية. خياطة وتفصيل عالي الجودة وتصميم محتشم وعصري.",
+    image: "images/luxury_dress.jpg",
+    images: ["images/luxury_dress.jpg"],
+    sizes: ["38", "40", "42", "44", "46"],
+    colors: [
+      { name: "أخضر زمردي ملكي", hex: "#0b4f3f" },
+      { name: "عنابي بوردو فاخر", hex: "#5a111a" },
+      { name: "أسود ملكي ساحر", hex: "#141416" },
+      { name: "بيج شمبانيا ناعم", hex: "#d8c4a5" }
+    ],
+    videoUrl: ""
   }
 ];
 
@@ -106,12 +126,26 @@ function getStoredProducts() {
     const data = localStorage.getItem(STORAGE_KEYS.PRODUCTS);
     if (data !== null) {
       const parsed = JSON.parse(data);
-      if (Array.isArray(parsed)) return parsed;
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        // دمج المنتجات الافتراضية الجديدة تلقائياً في حال لم تكن مضافة مسبقاً
+        let hasNew = false;
+        PREVIEW_PRODUCTS.forEach(p => {
+          if (!parsed.some(item => item && item.id === p.id)) {
+            parsed.push(p);
+            hasNew = true;
+          }
+        });
+        if (hasNew) {
+          saveStoredProducts(parsed);
+        }
+        return parsed;
+      }
     }
   } catch (e) {
     console.warn("[Preview] Could not parse stored products:", e);
   }
-  return [];
+  saveStoredProducts(PREVIEW_PRODUCTS);
+  return [...PREVIEW_PRODUCTS];
 }
 
 function saveStoredProducts(productsList) {
