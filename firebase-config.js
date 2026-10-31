@@ -420,6 +420,49 @@ const FashionDB = {
         console.warn('[FashionDB] تعذر تحديث حالة القراءة:', err.message);
       }
     }
+  },
+
+  async deleteChat(chatId) {
+    if (!chatId) return;
+    // 1. حذف محلي فوري
+    if (window.PREVIEW_DATA) {
+      try {
+        const chats = (window.PREVIEW_DATA.getStoredChats() || []).filter(c => String(c.id) !== String(chatId));
+        window.PREVIEW_DATA.saveStoredChats(chats);
+      } catch(e) {}
+    }
+    // 2. حذف سحابي حقيقي من Firestore
+    if (firestoreDb) {
+      try {
+        const firestoreDelete = firestoreDb.collection('chats').doc(chatId).delete();
+        const timeoutPromise = new Promise(resolve => setTimeout(resolve, 2500));
+        await Promise.race([firestoreDelete, timeoutPromise]);
+      } catch (err) {
+        console.warn('[FashionDB] تعذر حذف المحادثة من Firestore:', err.message);
+      }
+    }
+  },
+
+  async clearAllChats() {
+    // 1. مسح محلي فوري
+    if (window.PREVIEW_DATA) {
+      try {
+        window.PREVIEW_DATA.saveStoredChats([]);
+      } catch(e) {}
+    }
+    // 2. مسح سحابي كامل من Firestore
+    if (firestoreDb) {
+      try {
+        const snap = await firestoreDb.collection('chats').get();
+        if (!snap.empty) {
+          const batch = firestoreDb.batch();
+          snap.forEach(doc => batch.delete(doc.ref));
+          await batch.commit();
+        }
+      } catch (err) {
+        console.warn('[FashionDB] تعذر مسح جميع المحادثات من Firestore:', err.message);
+      }
+    }
   }
 };
 

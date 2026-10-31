@@ -42,7 +42,7 @@ const STORAGE_KEYS = {
   SETTINGS: 'fashion_hanin_store_settings'
 };
 
-// تصفير وتهيئة التخزين الحقيقي لمتجر Fashion by Hanin وتنظيف المنتجات القديمة تلقائياً
+// تصفير وتهيئة التخزين الحقيقي لمتجر Fashion by Hanin وتنظيف المنتجات القديمة والمحادثات التجريبية تلقائياً
 try {
   const currentProds = localStorage.getItem(STORAGE_KEYS.PRODUCTS);
   if (currentProds) {
@@ -55,6 +55,12 @@ try {
     }
   } else {
     localStorage.setItem(STORAGE_KEYS.PRODUCTS, JSON.stringify(PREVIEW_PRODUCTS));
+  }
+
+  // تنظيف المحادثات التجريبية من التخزين المحلي لمرة واحدة
+  if (!localStorage.getItem('fashion_hanin_chats_cleaned_v1')) {
+    localStorage.setItem('fashion_hanin_chats_cleaned_v1', '1');
+    localStorage.removeItem(STORAGE_KEYS.CHATS);
   }
 } catch(e) {}
 

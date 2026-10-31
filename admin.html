@@ -2395,6 +2395,7 @@
                         <div style="display:flex;gap:8px;align-items:center;">
                             <button type="button" class="btn btn-outline btn-sm active" id="filterAllChatsBtn" onclick="filterChats('all')"><i class="fas fa-inbox"></i> الكل</button>
                             <button type="button" class="btn btn-outline btn-sm" id="filterUnreadChatsBtn" onclick="filterChats('unread')"><i class="fas fa-bell"></i> غير مقروءة</button>
+                            <button type="button" class="btn btn-red btn-sm" onclick="confirmClearAllChats()" title="مسح جميع المحادثات نهائياً"><i class="fas fa-trash-alt"></i> مسح الكل</button>
                         </div>
                     </div>
 
@@ -3820,6 +3821,7 @@
                                 <div style="display:flex;gap:4px;align-items:center;">
                                     ${orderBadge}
                                     ${hasUnread ? '<span class="admin-chat-unread-badge">جديد</span>' : ''}
+                                    <button type="button" class="btn btn-ghost btn-xs" onclick="event.stopPropagation(); deleteSingleChat('${c.id}')" title="حذف المحادثة" style="color:var(--text-muted);padding:2px 6px;margin-right:4px;"><i class="fas fa-trash-alt"></i></button>
                                 </div>
                             </div>
                         </div>
@@ -3974,10 +3976,14 @@
 
         function deleteActiveChat() {
             if (!activeChatId) return;
-            askDelete('هل أنت متأكد من حذف هذه المحادثة ورسائلها بالكامل؟', () => {
-                allAdminChats = allAdminChats.filter(c => String(c.id) !== String(activeChatId));
+            const targetChatId = activeChatId;
+            askDelete('هل أنت متأكد من حذف هذه المحادثة ورسائلها بالكامل؟', async () => {
+                allAdminChats = allAdminChats.filter(c => String(c.id) !== String(targetChatId));
                 if (window.PREVIEW_DATA) {
                     window.PREVIEW_DATA.saveStoredChats(allAdminChats);
+                }
+                if (window.FashionDB && typeof window.FashionDB.deleteChat === 'function') {
+                    await window.FashionDB.deleteChat(targetChatId);
                 }
                 activeChatId = null;
                 const unreadCount = allAdminChats.filter(c => c.unreadByAdmin).length;
@@ -3989,7 +3995,58 @@
                 if (emptyView) emptyView.style.display = 'flex';
                 if (activeView) activeView.style.display = 'none';
                 closeActiveChatMobile();
-                showToast('🗑 تم حذف المحادثة محلياً');
+                showToast('🗑 تم حذف المحادثة نهائياً من المتجر وقاعدة البيانات');
+            });
+        }
+
+        function deleteSingleChat(chatId) {
+            if (!chatId) return;
+            askDelete('هل أنت متأكد من حذف هذه المحادثة ورسائلها بالكامل نهائياً؟', async () => {
+                allAdminChats = allAdminChats.filter(c => String(c.id) !== String(chatId));
+                if (window.PREVIEW_DATA) {
+                    window.PREVIEW_DATA.saveStoredChats(allAdminChats);
+                }
+                if (window.FashionDB && typeof window.FashionDB.deleteChat === 'function') {
+                    await window.FashionDB.deleteChat(chatId);
+                }
+                if (String(activeChatId) === String(chatId)) {
+                    activeChatId = null;
+                    const emptyView = document.getElementById('adminChatEmpty');
+                    const activeView = document.getElementById('adminChatActive');
+                    if (emptyView) emptyView.style.display = 'flex';
+                    if (activeView) activeView.style.display = 'none';
+                    closeActiveChatMobile();
+                }
+                const unreadCount = allAdminChats.filter(c => c.unreadByAdmin).length;
+                updateAdminChatBadges(unreadCount);
+                renderAdminChatsList();
+                showToast('🗑 تم حذف المحادثة نهائياً');
+            });
+        }
+
+        function confirmClearAllChats() {
+            if (!allAdminChats || allAdminChats.length === 0) {
+                showToast('لا توجد محادثات لمسحها');
+                return;
+            }
+            askDelete('هل أنت متأكد من مسح جميع المحادثات وسجل الرسائل بالكامل؟', async () => {
+                allAdminChats = [];
+                activeChatId = null;
+                if (window.PREVIEW_DATA) {
+                    window.PREVIEW_DATA.saveStoredChats([]);
+                }
+                if (window.FashionDB && typeof window.FashionDB.clearAllChats === 'function') {
+                    await window.FashionDB.clearAllChats();
+                }
+                updateAdminChatBadges(0);
+                renderAdminChatsList();
+
+                const emptyView = document.getElementById('adminChatEmpty');
+                const activeView = document.getElementById('adminChatActive');
+                if (emptyView) emptyView.style.display = 'flex';
+                if (activeView) activeView.style.display = 'none';
+                closeActiveChatMobile();
+                showToast('🗑 تم مسح كافة المحادثات بنجاح');
             });
         }
 
