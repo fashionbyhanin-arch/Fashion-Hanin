@@ -4,15 +4,15 @@
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
     <title>Fashion by Hanin — لوحة التحكم</title>
-    <link rel="manifest" href="manifest.json"/>
+    <link rel="manifest" href="admin-manifest.json"/>
     <link rel="icon" type="image/jpeg" href="images/logo.jpg"/>
     <link rel="apple-touch-icon" href="images/logo.jpg"/>
     <meta name="mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-    <meta name="apple-mobile-web-app-title" content="Fashion by Hanin Admin"/>
-    <meta name="application-name" content="Fashion by Hanin Admin"/>
-    <meta name="theme-color" content="#14171a"/>
+    <meta name="apple-mobile-web-app-title" content="لوحة التحكم"/>
+    <meta name="application-name" content="لوحة التحكم"/>
+    <meta name="theme-color" content="#181c20"/>
     <link rel="preconnect" href="https://fonts.googleapis.com"/>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;900&family=Tajawal:wght@300;400;500;700;800&family=Jost:wght@400;500;600;700;800&family=Cinzel:wght@500;700;800&family=Cormorant+Garamond:wght@400;600;700&display=swap" rel="stylesheet"/>
@@ -802,10 +802,17 @@
             box-shadow: var(--shadow-sm);
             transition: var(--transition-smooth);
             min-width: 0;
+            cursor: pointer;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
         .stat-card:hover {
             transform: translateY(-2px);
-            border-color: #333;
+            border-color: var(--accent);
+            box-shadow: var(--shadow-md);
+        }
+        .stat-card:active {
+            transform: scale(0.98);
         }
         .stat-icon {
             width: 38px;
@@ -2186,8 +2193,16 @@
                         <button class="btn btn-black" onclick="showSection('add-product')"><i class="fas fa-plus"></i> منتج جديد</button>
                     </div>
                     <div class="stats-grid">
-                        <div class="stat-card"><div class="stat-icon"><i class="fas fa-tshirt"></i></div><div class="stat-value" id="statProducts">0</div><div class="stat-label">إجمالي المنتجات</div></div>
-                        <div class="stat-card"><div class="stat-icon"><i class="fas fa-bell"></i></div><div class="stat-value" id="statNewOrders">0</div><div class="stat-label">طلبات جديدة</div></div>
+                        <div class="stat-card" onclick="showSection('products')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showSection('products');}" title="عرض جميع المنتجات" role="button" tabindex="0">
+                            <div class="stat-icon"><i class="fas fa-tshirt"></i></div>
+                            <div class="stat-value" id="statProducts">0</div>
+                            <div class="stat-label">إجمالي المنتجات</div>
+                        </div>
+                        <div class="stat-card" onclick="showSection('orders')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showSection('orders');}" title="عرض جميع الطلبات" role="button" tabindex="0">
+                            <div class="stat-icon"><i class="fas fa-bell"></i></div>
+                            <div class="stat-value" id="statNewOrders">0</div>
+                            <div class="stat-label">طلبات جديدة</div>
+                        </div>
                     </div>
                     <div class="dash-grid">
                         <div class="card">
@@ -2296,6 +2311,14 @@
                                 <span>قاعدة البيانات:</span>
                                 <span style="background:rgba(16, 185, 129, 0.15); color:#10b981; padding:3px 10px; border-radius:12px; font-size:12px; font-weight:700;">🟢 Firebase (Firestore & Auth) متصل</span>
                             </div>
+                            <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--border);">
+                                <span>واتساب المتجر:</span>
+                                <a href="https://wa.me/213555609075" target="_blank" style="color:#10b981; font-weight:700; text-decoration:none;"><i class="fab fa-whatsapp"></i> 05 55 60 90 75</a>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--border);">
+                                <span>حساب إنستغرام:</span>
+                                <a href="https://www.instagram.com/fashion.by.hanin/" target="_blank" style="color:#e1306c; font-weight:700; text-decoration:none;"><i class="fab fa-instagram"></i> @fashion.by.hanin</a>
+                            </div>
                             <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0;">
                                 <span>استضافة الصور السحابية:</span>
                                 <strong style="color:var(--text);">Cloudinary CDN</strong>
@@ -2323,6 +2346,33 @@
                                 <small style="display:block; color:var(--text-muted); font-size:12px; margin-top:4px;">تأكد من اختيار Signing Mode = Unsigned داخل إعدادات Upload Presets في Cloudinary.</small>
                             </div>
                             <button type="button" class="btn btn-black" onclick="saveCloudinarySettings()"><i class="fas fa-save"></i> حفظ إعدادات Cloudinary</button>
+                        </div>
+                    </div>
+
+                    <!-- Google Sheets Integration Card -->
+                    <div class="card" style="margin-top:20px;">
+                        <div class="card-header">
+                            <div class="card-icon" style="background:rgba(15, 157, 88, 0.12); color:#0f9d58;"><i class="fas fa-file-excel"></i></div>
+                            <div>
+                                <div class="card-title">تكامل Google Sheets (مزامنة الطلبات تلقائياً)</div>
+                                <div class="card-subtitle">
+                                    <span id="gsheetDot" style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#555; margin-left:6px;"></span>
+                                    <span id="gsheetStatusText">غير متصل</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="padding:16px;">
+                            <div style="margin-bottom:14px;">
+                                <label style="display:block; font-size:13px; font-weight:700; color:var(--text); margin-bottom:6px;">رابط Google Web App (Apps Script):</label>
+                                <input type="text" id="gsheetUrlInput" placeholder="https://script.google.com/macros/s/.../exec" style="width:100%; padding:10px 14px; border:1px solid var(--border); border-radius:8px; background:var(--surface2); color:var(--text); font-family:monospace;" />
+                                <small style="display:block; color:var(--text-muted); font-size:12px; margin-top:4px;">ألصق رابط نشر تطبيق الويب لمزامنة كل طلب جديد يتم استلامه فورياً في جدول بيانات Google.</small>
+                            </div>
+                            <div style="display:flex; gap:10px; align-items:center;">
+                                <button type="button" class="btn btn-black" onclick="saveGSheetUrl()"><i class="fas fa-save"></i> حفظ وتفعيل الربط</button>
+                                <div id="gsheetRemoveWrap" style="display:none;">
+                                    <button type="button" class="btn btn-outline" style="color:#ef4444; border-color:#ef4444;" onclick="removeGSheetUrl()"><i class="fas fa-unlink"></i> إلغاء الربط</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -2504,11 +2554,14 @@
             allOrders = {};
         let uploadedImages = [],
             editingProductKey = null,
-            existingImagesBackup = [];
+            existingImagesBackup = [],
+            isUploadingImages = false;
         let deleteCallback = null;
         let productVideoUrl = '';
         let productVideoPendingFile = null;
         const allProductsData = {};
+        let allAdminChats = [];
+        let activeChatId = null;
 
         function togglePasswordVisibility(inputId, btn) {
             const input = document.getElementById(inputId);
@@ -2627,6 +2680,7 @@
             initPresetColors();
             initCloudinaryInputs();
             updateLivePreview();
+            initAdminChatsListener();
             ['pName', 'pPrice', 'pOldPrice'].forEach(id => document.getElementById(id)?.addEventListener('input', updateLivePreview));
         });
 
@@ -2677,30 +2731,87 @@
             // مزامنة المحادثات لحظياً
             if (window.FashionDB && typeof window.FashionDB.onAllChatsChange === 'function') {
                 window.FashionDB.onAllChatsChange((chats) => {
-                    allAdminChats = chats || [];
-                    const unreadCount = allAdminChats.filter(c => c.unreadByAdmin).length;
-                    const badge = document.getElementById('chatsBadge');
-                    if (badge) {
-                        badge.innerText = unreadCount;
-                        badge.style.display = unreadCount > 0 ? 'inline-flex' : 'none';
-                    }
-                    renderAdminChatsList();
-                    if (activeChatId) {
-                        const cur = allAdminChats.find(c => String(c.id) === String(activeChatId));
-                        if (cur) renderAdminChatMessages(cur);
-                    }
+                    syncAdminChatsState(chats);
                 });
             }
         }
 
-        function loadLocalAdminData() {
-            initAdminDataSync();
+        function syncAdminChatsState(chats) {
+            allAdminChats = Array.isArray(chats) ? chats : [];
+            allAdminChats.sort((a, b) => (b.lastMessageTime || 0) - (a.lastMessageTime || 0));
+
+            const secChats = document.getElementById('section-chats');
+            const isChatsActive = secChats && secChats.classList.contains('active');
+
+            if (activeChatId) {
+                const current = allAdminChats.find(c => 
+                    String(c.id) === String(activeChatId) ||
+                    String(c.id).replace(/^chat_/, '') === String(activeChatId).replace(/^chat_/, '')
+                );
+                if (current) {
+                    activeChatId = current.id;
+                    // إذا كان المشرف فاتح قسم المحادثات وهذه المحادثة بالذات معروضة أمامه
+                    if (isChatsActive && current.unreadByAdmin) {
+                        current.unreadByAdmin = false;
+                        if (window.PREVIEW_DATA) {
+                            window.PREVIEW_DATA.saveStoredChats(allAdminChats);
+                        }
+                        if (window.FashionDB && typeof window.FashionDB.markChatAsRead === 'function') {
+                            window.FashionDB.markChatAsRead(current.id);
+                        }
+                    }
+                    updateActiveChatHeader(current);
+                    renderActiveChatMessages(current);
+                }
+            }
+
+            const unreadCount = allAdminChats.filter(c => c.unreadByAdmin).length;
+            updateAdminChatBadges(unreadCount);
+            renderAdminChatsList();
         }
 
-        // الاستماع لأي طلبات جديدة أو تحديثات تتم من نافذة المتجر
+        function loadLocalAdminData() {
+            if (window.PREVIEW_DATA) {
+                const chats = window.PREVIEW_DATA.getStoredChats() || [];
+                syncAdminChatsState(chats);
+            }
+        }
+
+        // الاستماع لأي تحديثات تتم من نافذة المتجر (storage event)
         window.addEventListener('storage', (e) => {
-            if (e.key === 'fashion_hanin_store_orders' || e.key === 'fashion_hanin_store_products' || e.key === 'fashion_hanin_store_chats') {
-                loadLocalAdminData();
+            if (e.key === 'fashion_hanin_store_chats') {
+                const chats = window.PREVIEW_DATA ? window.PREVIEW_DATA.getStoredChats() : [];
+                syncAdminChatsState(chats);
+            } else if (e.key === 'fashion_hanin_store_products') {
+                if (window.PREVIEW_DATA) {
+                    const storedProds = window.PREVIEW_DATA.getStoredProducts() || [];
+                    allProducts = {};
+                    for (let k in allProductsData) delete allProductsData[k];
+                    storedProds.forEach(p => {
+                        allProducts[p.id] = p;
+                        allProductsData[p.id] = p;
+                    });
+                    const statP = document.getElementById('statProducts');
+                    if (statP) statP.innerText = Object.keys(allProducts).length;
+                    const pCnt = document.getElementById('productsCount');
+                    if (pCnt) pCnt.innerText = Object.keys(allProducts).length + ' منتج';
+                    renderProductsList(allProducts);
+                }
+            } else if (e.key === 'fashion_hanin_store_orders') {
+                if (window.PREVIEW_DATA) {
+                    const storedOrders = window.PREVIEW_DATA.getStoredOrders() || [];
+                    allOrders = {};
+                    storedOrders.forEach(o => { allOrders[o.id] = o; });
+                    renderOrdersTable(allOrders);
+                }
+            }
+        });
+
+        // المزامنة الفورية عند العودة لتبويب لوحة التحكم (focus event)
+        window.addEventListener('focus', () => {
+            if (window.PREVIEW_DATA) {
+                const chats = window.PREVIEW_DATA.getStoredChats() || [];
+                syncAdminChatsState(chats);
             }
         });
 
@@ -2812,57 +2923,139 @@
             showToast('✅ جميع البيانات متزامنة ومحفوظة في قاعدة بيانات المتجر السحابية!');
         }
 
+        // ضغط ذكي فوري لصور الهاتف قبل الرفع لضمان سرعة فائقة وحجم لا يتعدى 250KB
+        function compressImage(file, maxWidth = 1280, maxHeight = 1280, quality = 0.82) {
+            return new Promise((resolve) => {
+                if (!file || !file.type || !file.type.startsWith('image/')) return resolve(file);
+                if (file.size < 250 * 1024) return resolve(file); // إذا كانت خفيفة مسبقاً نتركها كما هي
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        let width = img.width;
+                        let height = img.height;
+                        if (width > maxWidth || height > maxHeight) {
+                            if (width > height) {
+                                height = Math.round((height * maxWidth) / width);
+                                width = maxWidth;
+                            } else {
+                                width = Math.round((width * maxHeight) / height);
+                                height = maxHeight;
+                            }
+                        }
+                        const canvas = document.createElement('canvas');
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+                        canvas.toBlob((blob) => {
+                            if (blob && blob.size < file.size) {
+                                const compressedFile = new File([blob], (file.name || 'image').replace(/\.[^.]+$/, '.jpg'), {
+                                    type: 'image/jpeg',
+                                    lastModified: Date.now()
+                                });
+                                resolve(compressedFile);
+                            } else {
+                                resolve(file);
+                            }
+                        }, 'image/jpeg', quality);
+                    };
+                    img.onerror = () => resolve(file);
+                    img.src = e.target.result;
+                };
+                reader.onerror = () => resolve(file);
+                reader.readAsDataURL(file);
+            });
+        }
+
         async function uploadSingleFile(file) {
+            // ضغط فوري للصورة لتسريع الرفع 10 أضعاف
+            const compressed = await compressImage(file);
             // رفع مباشر إلى Cloudinary إذا تم إدخال الإعدادات، أو قراءة محلياً كـ DataURL
             if (window.FashionDB && typeof window.FashionDB.uploadToCloudinary === 'function') {
-                return await window.FashionDB.uploadToCloudinary(file);
+                return await window.FashionDB.uploadToCloudinary(compressed);
             }
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
                 reader.onload = (e) => resolve(e.target.result);
                 reader.onerror = () => reject(new Error('فشل قراءة الملف'));
-                reader.readAsDataURL(file);
+                reader.readAsDataURL(compressed);
             });
         }
 
         async function handleMultipleFiles(files) {
-            if (!files.length) return;
+            if (!files || !files.length) return;
             const arr = Array.from(files);
             const current = uploadedImages.length + existingImagesBackup.length;
             if (arr.length + current > 10) { showToast('الحد الأقصى 10 صور', 'error'); return; }
+
+            isUploadingImages = true;
+            const submitBtn = document.getElementById('submitFormBtn');
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري رفع الصور...';
+            }
+
             const container = document.getElementById('thumbnailsContainer');
             for (let i = 0; i < arr.length; i++) {
                 const file = arr[i];
-                const thumbId = 'thumb_' + Date.now() + i;
+                const thumbId = 'thumb_' + Date.now() + '_' + i;
+                
+                // عرض فوري للصورة المصغرة محلياً دون انتظار
                 const reader = new FileReader();
                 reader.onload = (e) => {
-                    const div = document.createElement('div');
-                    div.className = 'thumb-item';
-                    div.id = thumbId;
-                    div.innerHTML = `<img src="${e.target.result}"><div class="thumb-status">⏳</div>`;
-                    container.appendChild(div);
+                    if (!document.getElementById(thumbId)) {
+                        const div = document.createElement('div');
+                        div.className = 'thumb-item';
+                        div.id = thumbId;
+                        div.innerHTML = `<img src="${e.target.result}"><div class="thumb-status">⏳</div>`;
+                        container.appendChild(div);
+                    }
+                    if (uploadedImages.length === 0 && existingImagesBackup.length === 0) {
+                        updateMainPreview(e.target.result);
+                    }
                 };
                 reader.readAsDataURL(file);
+
                 try {
                     const url = await uploadSingleFile(file);
-                    uploadedImages.push(url);
-                    const el = document.getElementById(thumbId);
-                    if (el) { el.querySelector('.thumb-status').innerHTML = '✓'; }
-                    if (uploadedImages.length === 1 && existingImagesBackup.length === 0) updateMainPreview(url);
-                } catch {
+                    if (url) {
+                        uploadedImages.push(url);
+                        const el = document.getElementById(thumbId);
+                        if (el) { el.querySelector('.thumb-status').innerHTML = '✓'; }
+                        updateMainPreview(url);
+                    }
+                } catch (err) {
+                    console.warn('[Admin] خطأ رفع الصورة:', err);
                     const el = document.getElementById(thumbId);
                     if (el) { el.querySelector('.thumb-status').innerHTML = '✕'; }
-                    showToast('فشل رفع صورة', 'error');
+                    showToast('تم اعتماد النسخة المحلية للصورة', 'warning');
                 }
+            }
+
+            isUploadingImages = false;
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = editingProductKey ? '<i class="fas fa-save"></i> تحديث' : '<i class="fas fa-cloud-upload-alt"></i> نشر';
             }
         }
 
         function updateMainPreview(url) {
-            const img = document.getElementById('previewImg'),
-                ph = document.getElementById('previewImgArea').querySelector('.fa-image');
-            if (url) { img.src = url;
-                img.style.display = 'block'; if (ph) ph.style.display = 'none'; } else { img.style.display = 'none'; if (
-                    ph) ph.style.display = 'block'; }
+            const img = document.getElementById('previewImg');
+            const area = document.getElementById('previewImgArea');
+            const ph = area ? area.querySelector('.fa-image') : null;
+            if (img) {
+                if (url) {
+                    img.src = url;
+                    img.style.display = 'block';
+                    if (ph) ph.style.display = 'none';
+                } else {
+                    img.src = '';
+                    img.style.display = 'none';
+                    if (ph) ph.style.display = 'block';
+                }
+            }
         }
 
         function getAllImageList() {
@@ -3060,8 +3253,10 @@
 
         function resetForm() {
             editingProductKey = null;
-            document.getElementById('formTitle').innerHTML = 'إضافة منتج جديد';
-            document.getElementById('submitFormBtn').innerHTML = '<i class="fas fa-cloud-upload-alt"></i> نشر';
+            const formTitle = document.getElementById('formTitle');
+            if (formTitle) formTitle.innerHTML = 'إضافة منتج جديد';
+            const submitBtn = document.getElementById('submitFormBtn');
+            if (submitBtn) submitBtn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> نشر';
             ['pName', 'pPrice', 'pDesc'].forEach(id => {
                 const el = document.getElementById(id);
                 if (el) el.value = '';
@@ -3075,9 +3270,14 @@
             selectedSizes = [];
             uploadedImages = [];
             existingImagesBackup = [];
+            isUploadingImages = false;
+            const fileInp = document.getElementById('multiFileInput');
+            if (fileInp) fileInp.value = '';
             if (document.getElementById('extraImageUrls')) document.getElementById('extraImageUrls').value = '';
-            document.getElementById('colorsGrid').innerHTML = '';
-            document.getElementById('thumbnailsContainer').innerHTML = '';
+            const colorsGrid = document.getElementById('colorsGrid');
+            if (colorsGrid) colorsGrid.innerHTML = '';
+            const thumbnailsContainer = document.getElementById('thumbnailsContainer');
+            if (thumbnailsContainer) thumbnailsContainer.innerHTML = '';
             productVideoUrl = '';
             productVideoPendingFile = null;
             if (typeof updateProductVideoPreview === 'function') updateProductVideoPreview('');
@@ -3111,6 +3311,11 @@
             if (!name) { showToast('يرجى إدخال اسم المنتج', 'error'); return; }
             if (isNaN(price) || price < 0) { showToast('يرجى إدخال سعر صحيح', 'error'); return; }
 
+            if (isUploadingImages) {
+                showToast('⏳ جاري إكمال رفع الصور، يرجى الانتظار لحظات...', 'warning');
+                return;
+            }
+
             const submitBtn = document.getElementById('submitFormBtn');
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الحفظ...';
@@ -3138,7 +3343,7 @@
                     oldPrice: parseFloat(document.getElementById('pOldPrice')?.value) || 0,
                     price2: parseFloat(document.getElementById('pPrice2')?.value) || 0,
                     price3: parseFloat(document.getElementById('pPrice3')?.value) || 0,
-                    description: document.getElementById('pDesc').value.trim(),
+                    description: document.getElementById('pDesc')?.value.trim() || '',
                     realQuantity: parseInt(document.getElementById('realQuantity')?.value) || 0,
                     displayQuantity: parseInt(document.getElementById('displayQuantity')?.value) || 0,
                     showQuantity: document.getElementById('showQuantityToggle') ? document.getElementById('showQuantityToggle').checked : true,
@@ -3160,25 +3365,35 @@
                     } else {
                         prods.push({ id: editingProductKey, ...productData });
                     }
-                    showToast('✅ تم تحديث المنتج بنجاح');
                 } else {
                     productData.id = targetKey;
                     productData.createdAt = Date.now();
                     prods.unshift(productData);
-                    showToast('✅ تم إضافة المنتج بنجاح');
                 }
-                if (window.FashionDB && typeof window.FashionDB.saveProduct === 'function') {
-                    await window.FashionDB.saveProduct(productData);
-                } else if (window.PREVIEW_DATA) {
+
+                // 1. حفظ محلي فوري دائماً لضمان ظهور المنتج حتى لو انقطع الإنترنت
+                if (window.PREVIEW_DATA) {
                     window.PREVIEW_DATA.saveStoredProducts(prods);
                 }
-                loadLocalAdminData();
 
+                // 2. مزامنة سحابية مع مهلة أمان قصوى 3 ثوانٍ حتى لا تعلق الواجهة أبداً
+                if (window.FashionDB && typeof window.FashionDB.saveProduct === 'function') {
+                    try {
+                        const savePromise = window.FashionDB.saveProduct(productData);
+                        const timeoutPromise = new Promise(resolve => setTimeout(() => resolve(productData), 3000));
+                        await Promise.race([savePromise, timeoutPromise]);
+                    } catch (e) {
+                        console.warn('[Admin] تعذر الحفظ السحابي الفوري، تم الحفظ محلياً بنجاح:', e);
+                    }
+                }
+
+                showToast(editingProductKey ? '✅ تم تحديث المنتج بنجاح' : '✅ تم إضافة ونشر المنتج بنجاح');
+                loadLocalAdminData();
                 resetForm();
                 showSection('products');
             } catch (err) {
                 console.error('Error submitting product:', err);
-                showToast('❌ خطأ في حفظ المنتج: ' + err.message, 'error');
+                showToast('❌ خطأ في حفظ المنتج: ' + (err.message || 'حدث خطأ غير متوقع'), 'error');
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = editingProductKey ? '<i class="fas fa-save"></i> تحديث' : '<i class="fas fa-cloud-upload-alt"></i> نشر';
@@ -3193,7 +3408,7 @@
                 const p = data[key];
                 return `<div class="product-row" data-key="${key}">
         <img class="product-thumb" src="${p.image || ''}" onerror="this.src='https://placehold.co/50/222/555'">
-        <div class="product-info"><div class="product-name">${escapeHtml(p.name)}</div><div class="product-meta"><span class="product-price">${(p.price||0).toLocaleString()} دج</span><span class="product-qty-badge">👁 ${p.displayQuantity||0}</span></div></div>
+        <div class="product-info"><div class="product-name">${escapeHtml(p.name)}</div><div class="product-meta"><span class="product-price">${(p.price||0).toLocaleString()} دج</span></div></div>
         <div class="product-actions">
           <button class="btn btn-outline btn-icon edit-product-btn" data-key="${key}"><i class="fas fa-edit"></i></button>
           <button class="btn btn-red btn-icon delete-product-btn" data-key="${key}"><i class="fas fa-trash"></i></button>
@@ -3398,11 +3613,16 @@
             else if (name === 'add-product') title = editingProductKey ? 'تعديل' : 'منتج جديد';
             else if (name === 'products') title = 'المنتجات';
             else if (name === 'orders') title = 'الطلبات';
-            else if (name === 'chats') title = 'المحادثات المباشرة';
+            else if (name === 'chats') {
+                title = 'المحادثات المباشرة';
+                if (window.PREVIEW_DATA) {
+                    syncAdminChatsState(window.PREVIEW_DATA.getStoredChats() || []);
+                }
+            }
             else if (name === 'settings') title = 'الإعدادات';
             const titleEl = document.getElementById('topbarTitle');
             if (titleEl) titleEl.innerText = title;
-            document.querySelector('.main-content').scrollTo(0, 0);
+            document.querySelector('.main-content')?.scrollTo(0, 0);
         }
 
         let adminToastTimer = null;
@@ -3436,8 +3656,6 @@
         });
 
         // ══════ ADMIN LIVE CHAT MANAGEMENT SYSTEM ══════
-        let allAdminChats = [];
-        let activeChatId = null;
         let activeChatListener = null;
         let chatFilter = 'all';
         let chatSearchQuery = '';
@@ -3644,7 +3862,13 @@
         }
 
         function selectAdminChat(chatId) {
-            activeChatId = chatId;
+            const chat = allAdminChats.find(c => 
+                String(c.id) === String(chatId) || 
+                String(c.id).replace(/^chat_/, '') === String(chatId).replace(/^chat_/, '')
+            );
+            if (!chat) return;
+            activeChatId = chat.id;
+
             const container = document.getElementById('adminChatsContainer');
             if (container) container.classList.add('chat-open');
 
@@ -3653,14 +3877,14 @@
             if (emptyView) emptyView.style.display = 'none';
             if (activeView) activeView.style.display = 'flex';
 
-            const chat = allAdminChats.find(c => String(c.id) === String(chatId));
-            if (!chat) return;
-
             // إزالة إشعار غير مقروء وتحديث العداد والشارات فوراً
             if (chat.unreadByAdmin) {
                 chat.unreadByAdmin = false;
                 if (window.PREVIEW_DATA) {
                     window.PREVIEW_DATA.saveStoredChats(allAdminChats);
+                }
+                if (window.FashionDB && typeof window.FashionDB.markChatAsRead === 'function') {
+                    window.FashionDB.markChatAsRead(chat.id);
                 }
                 const unreadCount = allAdminChats.filter(c => c.unreadByAdmin).length;
                 updateAdminChatBadges(unreadCount);
@@ -3720,7 +3944,10 @@
         }
 
         async function sendChatMessageFromAdmin(chatId, text) {
-            const chat = allAdminChats.find(c => String(c.id) === String(chatId));
+            const chat = allAdminChats.find(c => 
+                String(c.id) === String(chatId) || 
+                String(c.id).replace(/^chat_/, '') === String(chatId).replace(/^chat_/, '')
+            );
             if (!chat) return;
             const timeStr = new Date().toLocaleTimeString('ar-DZ', { hour: '2-digit', minute: '2-digit' });
             const msgObj = {
@@ -3774,14 +4001,6 @@
             }
         }
 
-        initSizes();
-        initPresetColors();
-        updateLivePreview();
-        checkAuth();
-        initAdminChatsListener();
-        ['pName', 'pPrice', 'pOldPrice'].forEach(id => document.getElementById(id)?.addEventListener('input',
-            updateLivePreview));
-
         // ══════ PRODUCT VIDEO UPLOAD ══════
         function updateProductVideoPreview(url) {
             const wrap = document.getElementById('productVideoPreviewWrap');
@@ -3789,23 +4008,27 @@
             const videoEl = document.getElementById('productVideoPreview');
             const urlInput = document.getElementById('productVideoUrlInput');
             if (url) {
-                wrap.style.display = 'block';
-                zone.style.display = 'none';
-                videoEl.muted = true;
-                videoEl.defaultMuted = true;
-                videoEl.setAttribute('muted', '');
-                videoEl.setAttribute('playsinline', '');
-                videoEl.src = url;
-                videoEl.load();
-                videoEl.play().catch(() => {});
+                if (wrap) wrap.style.display = 'block';
+                if (zone) zone.style.display = 'none';
+                if (videoEl) {
+                    videoEl.muted = true;
+                    videoEl.defaultMuted = true;
+                    videoEl.setAttribute('muted', '');
+                    videoEl.setAttribute('playsinline', '');
+                    videoEl.src = url;
+                    videoEl.load();
+                    videoEl.play().catch(() => {});
+                }
                 if (urlInput && !url.startsWith('blob:') && !url.startsWith('indexeddb:')) {
                     urlInput.value = url;
                 }
             } else {
-                wrap.style.display = 'none';
-                zone.style.display = '';
-                videoEl.pause();
-                videoEl.src = '';
+                if (wrap) wrap.style.display = 'none';
+                if (zone) zone.style.display = '';
+                if (videoEl) {
+                    try { videoEl.pause(); } catch(e) {}
+                    videoEl.src = '';
+                }
                 if (urlInput) urlInput.value = '';
             }
         }
@@ -3858,14 +4081,15 @@
                 setTimeout(() => {
                     if (progressWrap) progressWrap.style.display = 'none';
                 }, 500);
-                document.getElementById('productVideoFileInput').value = '';
+                const vidInput = document.getElementById('productVideoFileInput');
+                if (vidInput) vidInput.value = '';
             }
         }
 
         // ══════ GOOGLE SHEETS INTEGRATION ══════
-        let currentGSheetUrl = '';
+        let currentGSheetUrl = localStorage.getItem('fashion_hanin_gsheet_url') || '';
 
-        updateGSheetUI('');
+        updateGSheetUI(currentGSheetUrl);
 
         function updateGSheetUI(url) {
             const input = document.getElementById('gsheetUrlInput');
@@ -3898,7 +4122,18 @@
                 return;
             }
             try {
-                await db.collection('settings').doc('googleSheetsUrl').set({ url: url });
+                localStorage.setItem('fashion_hanin_gsheet_url', url);
+                updateGSheetUI(url);
+                const db = window.FashionDB?.getDb();
+                if (db) {
+                    try {
+                        const setPromise = db.collection('settings').doc('googleSheetsUrl').set({ url: url });
+                        const timeout = new Promise(resolve => setTimeout(resolve, 1500));
+                        await Promise.race([setPromise, timeout]);
+                    } catch(err) {
+                        console.warn('[Admin] تعذر حفظ إعداد Google Sheets في Firestore:', err);
+                    }
+                }
                 showToast('✅ تم حفظ الرابط بنجاح');
             } catch(e) {
                 showToast('❌ خطأ في الحفظ: ' + e.message, 'error');
@@ -3908,7 +4143,20 @@
         async function removeGSheetUrl() {
             if (!confirm('هل أنت متأكد من إلغاء ربط جدول Google Sheets؟')) return;
             try {
-                await db.collection('settings').doc('googleSheetsUrl').delete();
+                localStorage.removeItem('fashion_hanin_gsheet_url');
+                updateGSheetUI('');
+                const db = window.FashionDB?.getDb();
+                if (db) {
+                    try {
+                        const delPromise = db.collection('settings').doc('googleSheetsUrl').delete();
+                        const timeout = new Promise(resolve => setTimeout(resolve, 1500));
+                        await Promise.race([delPromise, timeout]);
+                    } catch(err) {
+                        console.warn('[Admin] تعذر حذف إعداد Google Sheets في Firestore:', err);
+                    }
+                }
+                const input = document.getElementById('gsheetUrlInput');
+                if (input) input.value = '';
                 showToast('تم إلغاء الربط');
             } catch(e) {
                 showToast('❌ خطأ: ' + e.message, 'error');

@@ -2,7 +2,7 @@
    Fashion by Hanin – Service Worker (Client Preview Mode)
    ============================================= */
 
-const CACHE_NAME = 'fashion-hanin-preview-v1';
+const CACHE_NAME = 'fashion-hanin-preview-v7';
 
 // ===== INSTALL =====
 self.addEventListener('install', event => {

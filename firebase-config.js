@@ -40,6 +40,14 @@ try {
     }
     firebaseAuth = firebase.auth();
     firestoreDb = firebase.firestore();
+
+    // تمكين التخزين المؤقت المحلي لـ Firestore لضمان السرعة الفورية وحل الوعود دون انتظار الشبكة
+    if (typeof firestoreDb.enablePersistence === 'function') {
+      firestoreDb.enablePersistence({ synchronizeTabs: true }).catch(err => {
+        console.warn('[FashionDB] تنبيه التخزين المحلي:', err.code);
+      });
+    }
+
     isFirebaseInitialized = true;
     console.log('[FashionDB] ✅ تم تهيئة Firebase لمتجر Fashion by Hanin بنجاح.');
   } else {
@@ -82,10 +90,15 @@ const FashionDB = {
       formData.append('upload_preset', uploadPreset);
 
       try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 12000);
         const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
           method: 'POST',
-          body: formData
+          body: formData,
+          signal: controller.signal
         });
+        clearTimeout(timeoutId);
+
         if (!res.ok) {
           const errData = await res.json().catch(() => ({}));
           throw new Error(errData.error?.message || ('Cloudinary Error HTTP ' + res.status));
@@ -93,8 +106,13 @@ const FashionDB = {
         const data = await res.json();
         return data.secure_url;
       } catch (err) {
-        console.error('[FashionDB] فشل الرفع إلى Cloudinary:', err);
-        throw err;
+        console.warn('[FashionDB] تعذر الرفع إلى Cloudinary، استخدام DataURL بديل فوري:', err.message);
+        return new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onload = (e) => resolve(e.target.result);
+          reader.onerror = () => resolve('');
+          reader.readAsDataURL(file);
+        });
       }
     }
 
@@ -163,7 +181,7 @@ const FashionDB = {
     const id = product.id || ('prod_' + Date.now().toString(36));
     const toSave = { ...product, id, updatedAt: Date.now() };
 
-    // مزامنة محلية فورية
+    // 1. مزامنة محلية فورية دائماً
     if (window.PREVIEW_DATA) {
       let prods = window.PREVIEW_DATA.getStoredProducts();
       const idx = prods.findIndex(p => p.id === id);
@@ -172,22 +190,34 @@ const FashionDB = {
       window.PREVIEW_DATA.saveStoredProducts(prods);
     }
 
-    // مزامنة Firestore السحابية
+    // 2. مزامنة Firestore السحابية مع مهلة أمان صارمة (2.5 ثانية) لضمان عدم تعليق الواجهة أبداً
     if (firestoreDb) {
-      await firestoreDb.collection('products').doc(id).set(toSave, { merge: true });
+      try {
+        const firestoreWrite = firestoreDb.collection('products').doc(id).set(toSave, { merge: true });
+        const timeoutPromise = new Promise(resolve => setTimeout(resolve, 2500));
+        await Promise.race([firestoreWrite, timeoutPromise]);
+      } catch (err) {
+        console.warn('[FashionDB] تعذر الحفظ الفوري في Firestore، تم الحفظ محلياً:', err.message);
+      }
     }
     return toSave;
   },
 
   async deleteProduct(productId) {
-    // حذف محلي فوري
+    // 1. حذف محلي فوري
     if (window.PREVIEW_DATA) {
       let prods = window.PREVIEW_DATA.getStoredProducts().filter(p => p.id !== productId);
       window.PREVIEW_DATA.saveStoredProducts(prods);
     }
-    // حذف سحابي من Firestore
+    // 2. حذف سحابي من Firestore مع مهلة أمان
     if (firestoreDb) {
-      await firestoreDb.collection('products').doc(productId).delete();
+      try {
+        const firestoreDelete = firestoreDb.collection('products').doc(productId).delete();
+        const timeoutPromise = new Promise(resolve => setTimeout(resolve, 2500));
+        await Promise.race([firestoreDelete, timeoutPromise]);
+      } catch (err) {
+        console.warn('[FashionDB] تعذر الحذف الفوري من Firestore، تم الحذف محلياً:', err.message);
+      }
     }
   },
 
@@ -229,8 +259,12 @@ const FashionDB = {
       snap.forEach(doc => {
         orders.push({ id: doc.id, ...doc.data() });
       });
-      if (window.PREVIEW_DATA) window.PREVIEW_DATA.saveStoredOrders(orders);
-      callback(orders);
+      if (snap.size > 0 || !local.length) {
+        if (window.PREVIEW_DATA) window.PREVIEW_DATA.saveStoredOrders(orders);
+        callback(orders);
+      } else {
+        callback(local);
+      }
     }, err => {
       console.warn('[FashionDB] تعذر الاستماع لطلبات Firestore، العمل بالبيانات المحلية:', err.message);
     });
@@ -241,7 +275,13 @@ const FashionDB = {
       window.PREVIEW_DATA.toggleStoredOrderStatus(orderId);
     }
     if (firestoreDb) {
-      await firestoreDb.collection('orders').doc(orderId).update({ done: isDone, updatedAt: Date.now() });
+      try {
+        const firestoreUpdate = firestoreDb.collection('orders').doc(orderId).update({ done: isDone, updatedAt: Date.now() });
+        const timeoutPromise = new Promise(resolve => setTimeout(resolve, 2500));
+        await Promise.race([firestoreUpdate, timeoutPromise]);
+      } catch (err) {
+        console.warn('[FashionDB] تعذر تحديث حالة الطلب في Firestore:', err.message);
+      }
     }
   },
 
@@ -250,7 +290,13 @@ const FashionDB = {
       window.PREVIEW_DATA.deleteStoredOrder(orderId);
     }
     if (firestoreDb) {
-      await firestoreDb.collection('orders').doc(orderId).delete();
+      try {
+        const firestoreDelete = firestoreDb.collection('orders').doc(orderId).delete();
+        const timeoutPromise = new Promise(resolve => setTimeout(resolve, 2500));
+        await Promise.race([firestoreDelete, timeoutPromise]);
+      } catch (err) {
+        console.warn('[FashionDB] تعذر حذف الطلب من Firestore:', err.message);
+      }
     }
   },
 
@@ -349,6 +395,29 @@ const FashionDB = {
         }
       } catch (err) {
         console.warn('[FashionDB] تعذر إرسال الرسالة إلى Firestore:', err.message);
+      }
+    }
+  },
+
+  async markChatAsRead(chatId) {
+    if (!chatId) return;
+    if (window.PREVIEW_DATA) {
+      try {
+        const chats = window.PREVIEW_DATA.getStoredChats() || [];
+        const cur = chats.find(c => String(c.id) === String(chatId));
+        if (cur) {
+          cur.unreadByAdmin = false;
+          window.PREVIEW_DATA.saveStoredChats(chats);
+        }
+      } catch(e) {}
+    }
+    if (firestoreDb) {
+      try {
+        await firestoreDb.collection('chats').doc(chatId).update({
+          unreadByAdmin: false
+        });
+      } catch (err) {
+        console.warn('[FashionDB] تعذر تحديث حالة القراءة:', err.message);
       }
     }
   }

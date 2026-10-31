@@ -1,0 +1,30 @@
+{
+  "name": "لوحة تحكم Fashion by Hanin",
+  "short_name": "لوحة التحكم",
+  "description": "لوحة إدارة ومتابعة متجر Fashion by Hanin",
+  "start_url": "./admin.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#111417",
+  "theme_color": "#181c20",
+  "lang": "ar",
+  "dir": "rtl",
+  "icons": [
+    {
+      "src": "images/logo.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "images/logo.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["business", "productivity"],
+  "prefer_related_applications": false
+}
+
