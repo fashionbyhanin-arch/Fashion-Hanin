@@ -5,77 +5,10 @@
  * طبقة بيانات وتخزين محلي 100% Client-side ومعزولة تماماً.
  */
 
+// المنتجات التجريبية القديمة التي تم حذفها بطلب المتجر (لضمان عدم ظهورها في أي جهاز)
+const DELETED_LEGACY_IDS = new Set(['hanin_p1', 'hanin_p2', 'hanin_p3', 'hanin_p4']);
+
 const PREVIEW_PRODUCTS = [
-  {
-    id: "hanin_p1",
-    name: "طقم كاجوال سليم فيت / جيم (Slim Fit T-Shirt + Jogger)",
-    subtitle: "Fashion by Hanin Casual",
-    price: 3600,
-    oldPrice: 4200,
-    price2: 3400,
-    price3: 3200,
-    description: "طقم كاجوال عصري أنيق، يجمع بين تيشيرت أسود سليم فيت فائق النعومة مع سروال جوغر رمادي مريح برباط مطاطي، مثالي للجيم والخروج اليومي.",
-    image: "images/outfit_gym_flat.jpg",
-    images: ["images/outfit_gym_flat.jpg", "images/outfit_gym_model.jpg"],
-    sizes: ["S", "M", "L", "XL", "XXL"],
-    colors: [
-      { name: "أسود ورمادي", hex: "#18181b" }
-    ],
-    videoUrl: ""
-  },
-  {
-    id: "hanin_p2",
-    name: "طقم هودي مريح فاخر (Premium Hoodie & Jogger)",
-    subtitle: "Fashion by Hanin Winter Collection",
-    price: 5000,
-    oldPrice: 5800,
-    price2: 4800,
-    price3: 4500,
-    description: "طقم شتوي راقٍ يتكون من هودي قطني مريح متوفر بـ 6 ألوان جذابة مع سروال جوغر رمادي دافئ. العرض يشمل التوصيل المجاني لجميع الولايات.",
-    image: "images/hoodie_jogger.jpg",
-    images: ["images/hoodie_jogger.jpg"],
-    sizes: ["M", "L", "XL", "XXL"],
-    colors: [
-      { name: "أبيض قطني", hex: "#ffffff" },
-      { name: "رمادي ميلانج", hex: "#888888" },
-      { name: "أسود فاحم", hex: "#111111" }
-    ],
-    videoUrl: ""
-  },
-  {
-    id: "hanin_p3",
-    name: "طقم ستريت وير أسود بالكامل (All Black Street Outfit)",
-    subtitle: "Fashion by Hanin Streetwear",
-    price: 3600,
-    oldPrice: 4400,
-    price2: 3400,
-    price3: 3200,
-    description: "إطلالة أول بلاك شبابية متناسقة. العرض يشمل تيشيرت أسود كاجوال مع جوغر أسود مريح بسعر العرض الترويجي 3600 دج بدل 4400 دج عند طلب الطقم.",
-    image: "images/all_black_street.jpg",
-    images: ["images/all_black_street.jpg"],
-    sizes: ["S", "M", "L", "XL", "XXL"],
-    colors: [
-      { name: "أسود ملكي", hex: "#0a0a0c" }
-    ],
-    videoUrl: ""
-  },
-  {
-    id: "hanin_p4",
-    name: "طقم كلاسيك فاخر أول بلاك (All Black Old Money Set)",
-    subtitle: "Fashion by Hanin Luxury Formal",
-    price: 5500,
-    oldPrice: 6700,
-    price2: 5200,
-    price3: 5000,
-    description: "إطلالة كلاسيكية ساحرة راقية بنمط أولد موني. تيشيرت أسود سليم فيت مع بنطلون كلاسيك بكسرات راقية وأنيقة بسعر 5500 دج بدل 6700 دج للقطع منفردة.",
-    image: "images/all_black_classic.jpg",
-    images: ["images/all_black_classic.jpg"],
-    sizes: ["M", "L", "XL", "XXL"],
-    colors: [
-      { name: "أسود فاخر", hex: "#121217" }
-    ],
-    videoUrl: ""
-  },
   {
     id: "hanin_p5",
     name: "فستان سهرة ماكسي حرير فاخر (Luxury Silk Evening Dress)",
@@ -109,15 +42,19 @@ const STORAGE_KEYS = {
   SETTINGS: 'fashion_hanin_store_settings'
 };
 
-// تصفير وتهيئة التخزين الحقيقي لمتجر Fashion by Hanin
+// تصفير وتهيئة التخزين الحقيقي لمتجر Fashion by Hanin وتنظيف المنتجات القديمة تلقائياً
 try {
-  if (!localStorage.getItem('fashion_hanin_prod_ready_v1')) {
-    localStorage.setItem('fashion_hanin_prod_ready_v1', '1');
-    localStorage.removeItem(STORAGE_KEYS.ORDERS);
-    localStorage.removeItem(STORAGE_KEYS.CHATS);
-    if (!localStorage.getItem(STORAGE_KEYS.PRODUCTS)) {
-      localStorage.setItem(STORAGE_KEYS.PRODUCTS, JSON.stringify(PREVIEW_PRODUCTS));
+  const currentProds = localStorage.getItem(STORAGE_KEYS.PRODUCTS);
+  if (currentProds) {
+    let list = JSON.parse(currentProds);
+    if (Array.isArray(list)) {
+      const filtered = list.filter(item => item && !DELETED_LEGACY_IDS.has(item.id));
+      if (filtered.length !== list.length) {
+        localStorage.setItem(STORAGE_KEYS.PRODUCTS, JSON.stringify(filtered.length ? filtered : PREVIEW_PRODUCTS));
+      }
     }
+  } else {
+    localStorage.setItem(STORAGE_KEYS.PRODUCTS, JSON.stringify(PREVIEW_PRODUCTS));
   }
 } catch(e) {}
 
@@ -125,17 +62,28 @@ function getStoredProducts() {
   try {
     const data = localStorage.getItem(STORAGE_KEYS.PRODUCTS);
     if (data !== null) {
-      const parsed = JSON.parse(data);
-      if (Array.isArray(parsed) && parsed.length > 0) {
-        // دمج المنتجات الافتراضية الجديدة تلقائياً في حال لم تكن مضافة مسبقاً
-        let hasNew = false;
-        PREVIEW_PRODUCTS.forEach(p => {
-          if (!parsed.some(item => item && item.id === p.id)) {
-            parsed.push(p);
-            hasNew = true;
-          }
-        });
-        if (hasNew) {
+      let parsed = JSON.parse(data);
+      if (Array.isArray(parsed)) {
+        // استبعاد أي منتجات محذوفة سابقة من التخزين المحلي
+        const beforeLen = parsed.length;
+        parsed = parsed.filter(item => item && !DELETED_LEGACY_IDS.has(item.id));
+        let hasChanges = (parsed.length !== beforeLen);
+
+        // إذا أصبحت القائمة فارغة نعيد تعيينها بقائمة المنتجات المعتمدة الحالية
+        if (parsed.length === 0) {
+          parsed = [...PREVIEW_PRODUCTS];
+          hasChanges = true;
+        } else {
+          // دمج المنتجات الافتراضية الجديدة تلقائياً في حال لم تكن مضافة مسبقاً
+          PREVIEW_PRODUCTS.forEach(p => {
+            if (!parsed.some(item => item && item.id === p.id)) {
+              parsed.push(p);
+              hasChanges = true;
+            }
+          });
+        }
+
+        if (hasChanges) {
           saveStoredProducts(parsed);
         }
         return parsed;
