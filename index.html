@@ -38,9 +38,14 @@
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
   <script src="preview-data.js?v=3.0"></script>
   <script src="firebase-config.js?v=1.0"></script>
-  <link rel="stylesheet" href="style.css?v=3.0" />
-
-
+  <link rel="stylesheet" href="style.css?v=4.0" />
+  <script>
+    // تهيئة مظهر المتجر فوراً لمنع الوميض (الوضع الافتراضي: المضيء Light Mode)
+    (function () {
+      var saved = localStorage.getItem('fashion_hanin_site_theme') || 'light';
+      document.documentElement.setAttribute('data-theme', saved);
+    })();
+  </script>
 </head>
 
 <body>
@@ -51,19 +56,20 @@
       <div class="drawer-brand">
         <img src="images/logo.jpg" alt="Fashion by Hanin"
           style="height:32px;width:32px;border-radius:50%;object-fit:cover" onerror="this.style.display='none'">
-        <span class="drawer-brand-name" style="font-family:'Cinzel', serif; letter-spacing:1.5px; color:#cec4b8; font-weight:600;">Fashion by Hanin</span>
+        <span class="drawer-brand-name">Fashion by Hanin</span>
       </div>
       <button class="drawer-close" id="drawerClose"><i class="fas fa-times"></i></button>
     </div>
     <nav class="drawer-nav">
       <a href="#"><i class="fas fa-home"></i> الرئيسية</a>
       <a href="#products"><i class="fas fa-tshirt"></i> التشكيلة</a>
+      <a href="javascript:void(0)" onclick="toggleSiteTheme()"><i class="fas fa-moon" id="drawerThemeIcon"></i> <span id="drawerThemeText">الوضع المظلم</span></a>
       <a href="https://wa.me/213555609075?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%20Fashion%20by%20Hanin%D8%8C%20%D8%A3%D9%88%D8%AF%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%A8%D8%AE%D8%B5%D9%88%D8%B5%20%D8%A7%D9%84%D9%85%D9%86%D8%AA%D8%AC%D8%A7%D8%AA"
         target="_blank"><i class="fab fa-whatsapp"></i> واتساب</a>
       <a href="https://www.instagram.com/fashion.by.hanin/" target="_blank"><i class="fab fa-instagram"></i> إنستغرام</a>
     </nav>
-    <div style="padding:20px;margin-top:auto;border-top:1px solid #222">
-      <p style="color:#777;font-size:13px">© 2026 Fashion by Hanin</p>
+    <div style="padding:20px;margin-top:auto;border-top:1px solid var(--color-border)">
+      <p style="color:var(--color-text-muted);font-size:13px">© 2026 Fashion by Hanin</p>
     </div>
   </div>
 
@@ -74,19 +80,21 @@
       <a href="#" class="nav-logo">
         <img src="images/logo.jpg" alt="Fashion by Hanin"
           style="height:38px;width:38px;border-radius:50%;object-fit:cover" onerror="this.style.display='none'">
-        <span class="nav-logo-name" style="font-family:'Cinzel', serif; letter-spacing:1px; color:#cec4b8;">Fashion by
-          Hanin</span>
+        <span class="nav-logo-name">Fashion by Hanin</span>
       </a>
       <div class="header-search">
         <i class="fas fa-search"></i>
         <input type="text" id="globalSearch" placeholder="ابحث في التشكيلة...">
       </div>
       <div class="header-actions">
+        <button class="header-btn" id="themeToggleBtn" onclick="toggleSiteTheme()" title="تبديل الوضع (المضيء / المظلم)">
+          <i class="fas fa-moon" id="themeIcon"></i>
+        </button>
         <button class="header-btn" id="favNavBtn" style="position:relative;" title="المفضلة">
           <i class="far fa-heart"></i>
           <span class="cart-badge" id="favBadge" style="display:none;background:#ff3b30;">0</span>
         </button>
-        <button class="header-btn" id="cartIconBtn">
+        <button class="header-btn" id="cartIconBtn" title="سلة المشتريات">
           <i class="fas fa-shopping-bag"></i>
           <span class="cart-badge" id="cartBadge">0</span>
         </button>
@@ -97,17 +105,12 @@
   <!-- HERO -->
   <section class="hero">
     <div class="hero-content">
-      <div class="hero-badge" style="border:1px solid #cec4b8; color:#cec4b8; background:rgba(206,196,184,0.12);"><i
-          class="fas fa-sparkles" style="color:#cec4b8;"></i> تشكيلة Fashion by Hanin الحصرية 2026</div>
+      <div class="hero-badge"><i class="fas fa-sparkles"></i> تشكيلة Fashion by Hanin الحصرية 2026</div>
       <img src="Elegant HANIN Wordmark with Flourishes.png" alt="Fashion by Hanin" class="brand-logo-hero"
-        style="max-width:320px; width:clamp(240px, 60%, 340px); height:auto; object-fit:contain; border:none; border-radius:0; box-shadow:none; filter:drop-shadow(0 0 22px rgba(255,255,255,0.85)) drop-shadow(0 0 6px rgba(255,255,255,0.95));"
         onerror="this.src='logo-tran.png'">
-      <div class="hero-brand-name" style="font-family:'Cinzel', serif; letter-spacing:2px; color:#ffffff;">Fashion by
-        Hanin</div>
+      <div class="hero-brand-name">Fashion by Hanin</div>
       <p class="hero-tagline">أزياء وتصاميم راقية · إطلالات عصرية وأنيقة · تميز وتألق يلائم ذوقك الرفيع</p>
-      <a href="#products" class="btn-white"
-        style="background: linear-gradient(135deg, #cec4b8, #bdae9e); color: #1e2328; font-weight:700;"><i
-          class="fas fa-arrow-down" style="margin-left:8px;"></i> اكتشف التشكيلة والأسعار</a>
+      <a href="#products" class="btn-white"><i class="fas fa-arrow-down" style="margin-left:8px;"></i> اكتشف التشكيلة والأسعار</a>
     </div>
   </section>
 
@@ -152,8 +155,7 @@
     <div class="footer-inner">
       <div class="footer-grid">
         <div class="footer-brand">
-          <div class="logo-text" style="font-family:'Cinzel', serif; color:#cec4b8; letter-spacing:1px;">Fashion by
-            Hanin</div>
+          <div class="logo-text">Fashion by Hanin</div>
           <p style="margin-top:8px;font-size:13px;line-height:1.6">علامة أزياء فاخرة – نقدم لكم أرقى الأزياء والتصاميم
             العصرية بجودة استثنائية وأناقة تليق بك.</p>
           <div class="footer-socials">
@@ -525,6 +527,47 @@
   <script>
     const WILAYAS = [{ id: 1, name: "أدرار" }, { id: 2, name: "الشلف" }, { id: 3, name: "الأغواط" }, { id: 4, name: "أم البواقي" }, { id: 5, name: "باتنة" }, { id: 6, name: "بجاية" }, { id: 7, name: "بسكرة" }, { id: 8, name: "بشار" }, { id: 9, name: "البليدة" }, { id: 10, name: "البويرة" }, { id: 11, name: "تمنراست" }, { id: 12, name: "تبسة" }, { id: 13, name: "تلمسان" }, { id: 14, name: "تيارت" }, { id: 15, name: "تيزي وزو" }, { id: 16, name: "الجزائر" }, { id: 17, name: "الجلفة" }, { id: 18, name: "جيجل" }, { id: 19, name: "سطيف" }, { id: 20, name: "سعيدة" }, { id: 21, name: "سكيكدة" }, { id: 22, name: "سيدي بلعباس" }, { id: 23, name: "عنابة" }, { id: 24, name: "قالمة" }, { id: 25, name: "قسنطينة" }, { id: 26, name: "المدية" }, { id: 27, name: "مستغانم" }, { id: 28, name: "المسيلة" }, { id: 29, name: "معسكر" }, { id: 30, name: "ورقلة" }, { id: 31, name: "وهران" }, { id: 32, name: "البيض" }, { id: 33, name: "إليزي" }, { id: 34, name: "برج بوعريريج" }, { id: 35, name: "بومرداس" }, { id: 36, name: "الطارف" }, { id: 37, name: "تندوف" }, { id: 38, name: "تيسمسيلت" }, { id: 39, name: "الوادي" }, { id: 40, name: "خنشلة" }, { id: 41, name: "سوق أهراس" }, { id: 42, name: "تيبازة" }, { id: 43, name: "ميلة" }, { id: 44, name: "عين الدفلى" }, { id: 45, name: "النعامة" }, { id: 46, name: "عين تموشنت" }, { id: 47, name: "غرداية" }, { id: 48, name: "غليزان" }, { id: 49, name: "تيميمون" }, { id: 50, name: "برج باجي مختار" }, { id: 51, name: "أولاد جلال" }, { id: 52, name: "بني عباس" }, { id: 53, name: "عين صالح" }, { id: 54, name: "عين قزام" }, { id: 55, name: "تقرت" }, { id: 56, name: "جانت" }, { id: 57, name: "المغير" }, { id: 58, name: "المنيعة" }];
     const COMMUNES = { 1: ["أدرار", "تيميمون", "رقان", "أولف", "زاوية كنتة", "أنزجمير", "فنوغيل", "تالوت", "تسابيت", "بودة", "أقبلي", "تيمقتن"], 2: ["الشلف", "تنس", "أم الدروع", "بنيلول", "بوكادر", "الهرشو", "الأبيض مجاجة", "عين مران", "وادي الفضة"], 3: ["الأغواط", "آفلو", "قصر الحيران", "بريدة", "خنقة سيدي ناجي", "سبقاق"], 4: ["أم البواقي", "عين البيضاء", "عين فكرون", "المسكيانة", "عين مليلة", "سيقوس"], 5: ["باتنة", "عين توتة", "آريس", "تيمقاد", "مروانة", "النور", "بريكة", "رأس العيون"], 6: ["بجاية", "أقبو", "العوانة", "سيدي عيش", "خراطة", "أميزور", "فينالة"], 7: ["بسكرة", "طولقة", "فوغالة", "القنطرة", "سيدي عقبة", "أورلال", "أوماش"], 8: ["بشار", "عين الصفراء", "القنادسة", "كرزاز", "إيش", "مريجة"], 9: ["البليدة", "بوفاريك", "الأربعاء", "بني تامو", "مفتاح", "لودية", "بوعرفة"], 10: ["البويرة", "عين بسام", "سور الغزلان", "المعمورة", "بكيرة", "أعمر"], 11: ["تمنراست", "عين صالح", "إن قزام", "إن غار", "إدليس"], 12: ["تبسة", "الشريعة", "بئر العاتر", "عين الزروق", "العقلة"], 13: ["تلمسان", "مغنية", "بني صاف", "بني سنوس", "رمشي", "أندلسيات"], 14: ["تيارت", "فرندة", "مشرفة", "سوق ثلاثاء", "قصر الشلالة", "مدروسة"], 15: ["تيزي وزو", "عزازقة", "أزفون", "بوزقن", "واضية", "تكتوكت", "تيفرات", "أقفادو"], 16: ["الجزائر", "باب الوادي", "الحراش", "بئر مراد رايس", "القبة", "بن عكنون", "برج الكيفان", "حيدرة", "السحاولة", "باب الزوار", "الدرارية", "الرغاية"], 17: ["الجلفة", "مسعد", "عين وسارة", "حاسي بحبح", "زاكر", "بيرين"], 18: ["جيجل", "الميلية", "الطاهير", "سيدي معروف", "الشقفة", "العوانة"], 19: ["سطيف", "عين الكبيرة", "العلمة", "بوغاء", "أقجون", "بني عزيز", "السطح"], 20: ["سعيدة", "عين الحجر", "سيدي بوبكر", "الدويوة", "المعمورة"], 21: ["سكيكدة", "عزابة", "الحروش", "رمضان جمال", "طاهير"], 22: ["سيدي بلعباس", "تلاغ", "تنيرة", "مرين", "محمد بن علي", "عين تيندامين"], 23: ["عنابة", "سرايدي", "العلمة", "الدراعية", "برحال"], 24: ["قالمة", "بوشقوف", "هيليوبوليس", "عين البيضاء", "مجاز عمار"], 25: ["قسنطينة", "الخروب", "ديدوش مراد", "زيغود يوسف", "عين عبيد", "أولاد رحمون"], 26: ["المدية", "بشلول", "الربعاء", "قصر البخاري", "شلاطة"], 27: ["مستغانم", "عين تادلس", "منصورة", "عين بوضياف", "سيدي لخضر", "خضرا"], 28: ["المسيلة", "بوسعادة", "عين الخضراء", "سيدي عيسى", "الصانع", "المطارفة"], 29: ["معسكر", "تيغينيف", "نسمو", "زهانة", "حاسي ماماش"], 30: ["ورقلة", "النقوسة", "حاسي مسعود", "المنقر", "سيدي خويلد"], 31: ["وهران", "بطيوة", "الأندلس", "سيدي الشحمي", "عين الترك", "وادي تليلات"], 32: ["البيض", "بوغني", "سيدي عمر", "الأبيض سيدي الشيخ"], 33: ["إليزي", "برج عمر إدريس", "دبداب", "إن أمناس"], 34: ["برج بوعريريج", "رأس الوادي", "بن داود", "منصورة", "الانصر"], 35: ["بومرداس", "بوداود", "ثنية الحد", "برج منايل", "خميس الخشنة"], 36: ["الطارف", "بن مهيدي", "الشط", "بوحجار", "الذرعان"], 37: ["تندوف", "تندوف"], 38: ["تيسمسيلت", "ثنية الأحد", "لارباعة", "بني شعيب"], 39: ["الوادي", "جامعة", "ورماس", "بن قشة", "الطالب العربي"], 40: ["خنشلة", "بغاي", "شلية", "بابار", "أنكان"], 41: ["سوق أهراس", "مداوروش", "حنانشة", "اولاد ادريس", "تيفاش"], 42: ["تيبازة", "قوراية", "شرشال", "الدامة", "خميستي"], 43: ["ميلة", "فرجيوة", "تسدان", "القرارم قوقة", "وادي النجاء"], 44: ["عين الدفلى", "الجندل", "المسعد", "بن علال"], 45: ["النعامة", "مشرية", "عسلة", "صفيصيفة"], 46: ["عين تموشنت", "الحساسنة", "سيدي بن عدة", "ولهاصة الغرب"], 47: ["غرداية", "متليلي", "المنيعة", "بونورة", "القرارة", "بريان"], 48: ["غليزان", "جدل", "عمي موسى", "رهوية", "سيدي خطاب"], 49: ["تيميمون", "تيميمون", "شروين", "أوقروت", "أولاد سعيد"], 50: ["برج باجي مختار", "برج باجي مختار", "تيمياوين"], 51: ["أولاد جلال", "أولاد جلال", "الدوسن", "راس المياد"], 52: ["بني عباس", "بني عباس", "تامترت", "إقلي"], 53: ["عين صالح", "عين صالح", "فقارة الزوى", "إن الجل"], 54: ["عين قزام", "عين قزام", "تين زاوتين"], 55: ["تقرت", "تقرت", "المجمع الجزائري", "المرارة"], 56: ["جانت", "جانت", "إن أبانقاريت", "باراقة"], 57: ["المغير", "المغير", "جامعة", "سيدي سليمان", "منصورة"], 58: ["المنيعة", "المنيعة", "حاسي الگارة", "بالدة"] };
+
+    // ==================== THEME CONTROLLER (LIGHT / DARK) ====================
+    function applySiteTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      try { localStorage.setItem('fashion_hanin_site_theme', theme); } catch(e) {}
+      const icon = document.getElementById('themeIcon');
+      if (icon) {
+        if (theme === 'light') {
+          icon.className = 'fas fa-moon';
+          icon.style.color = 'var(--color-charcoal)';
+        } else {
+          icon.className = 'fas fa-sun';
+          icon.style.color = '#f59e0b';
+        }
+      }
+      const drawerIcon = document.getElementById('drawerThemeIcon');
+      const drawerText = document.getElementById('drawerThemeText');
+      if (drawerIcon && drawerText) {
+        if (theme === 'light') {
+          drawerIcon.className = 'fas fa-moon';
+          drawerText.textContent = 'الوضع المظلم';
+        } else {
+          drawerIcon.className = 'fas fa-sun';
+          drawerText.textContent = 'الوضع المضيء';
+        }
+      }
+    }
+
+    function toggleSiteTheme() {
+      const current = document.documentElement.getAttribute('data-theme') || 'light';
+      const next = current === 'dark' ? 'light' : 'dark';
+      applySiteTheme(next);
+      if (typeof showToast === 'function') {
+        showToast(next === 'light' ? '☀️ تم تفعيل الوضع المضيء' : '🌙 تم تفعيل الوضع المظلم');
+      }
+    }
+
+    (function initSiteTheme() {
+      const saved = localStorage.getItem('fashion_hanin_site_theme') || 'light';
+      applySiteTheme(saved);
+    })();
 
     // ==================== STANDALONE PREVIEW MODE ====================
     // تم فصل Firebase بالكامل — المتجر يعمل ببيانات محلية 100%

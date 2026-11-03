@@ -25,6 +25,12 @@
     </script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js">
     </script>
+    <script>
+        (function() {
+            var theme = localStorage.getItem('mh_admin_theme') || 'light';
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
     <style>
         @font-face {
             font-family: 'Firlest';
@@ -2533,15 +2539,13 @@
             showToast(next === 'light' ? '☀️ تم تفعيل المظهر المضيء' : '🌙 تم تفعيل المظهر المظلم');
         }
 
-        // Initialize Theme
+        // Initialize Theme (Default to Light Mode)
         (function initAdminTheme() {
             const saved = localStorage.getItem('mh_admin_theme');
             if (saved) {
                 applyAdminTheme(saved);
-            } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
-                applyAdminTheme('light');
             } else {
-                applyAdminTheme('dark');
+                applyAdminTheme('light');
             }
         })();
 
